@@ -11,7 +11,6 @@ const WhiteStartRow = () => {
             <div className=" p-9 bg-white"></div>
             <div className=" p-9 bg-black"></div>
             <div className=" p-9 bg-white"></div>
-            <div className=" p-9 bg-black"></div>
         </div>
     )
 }

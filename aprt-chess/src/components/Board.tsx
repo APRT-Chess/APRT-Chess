@@ -1,6 +1,5 @@
 import BlackStartRow from "./BlackStartRow";
 import WhiteStartRow from "./WhiteStartRow";
-
 const Board = () => {
     return (
         <div className="board bg-slate-500 h-screen w-screen flex items-center justify-center">
