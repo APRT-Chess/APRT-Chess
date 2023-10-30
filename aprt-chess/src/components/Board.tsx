@@ -43,10 +43,14 @@ const Board = () => {
           image = boardState[row][col]
           board.push(
             <div
-              className={`inline-flex w-28 h-28 items-center justify-center select-none  ${
+              className={`inline-flex w-28 h-28 items-center justify-center select-none 
+              x-coordinate-${row} y-coordinate-${col}  
+              ${
                 color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"
               }`}
-             
+            onDrop = {(e)=>console.log("dropped:",e.target)}
+            onDragOver={(e)=>e.preventDefault()}
+            
             >
               {image && <Piece image={image} x_coordinate={row} y_coordinate={col} boardState = {boardState}></Piece>}
             </div>
