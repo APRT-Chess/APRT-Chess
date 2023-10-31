@@ -2,34 +2,25 @@ import * as React from "react";
 
 interface props {
   image: string;
-  x_coordinate:number;
-  y_coordinate:number;
-  boardState:any
+  x_coordinate: number;
+  y_coordinate: number;
+  // boardState: string[][];
 }
 
-function Piece({ image,x_coordinate,y_coordinate,boardState }: props) {
-  
- 
+function Piece({ image, x_coordinate, y_coordinate }: props) {
 
-  function handleDrag(){
-    console.log("dragging",image,x_coordinate,y_coordinate)
+  function handleDrag(e: React.DragEvent<HTMLImageElement>) {
+    e.dataTransfer.setData("text/plain", `${x_coordinate}-${y_coordinate}`);
   }
- 
- 
-  return (
-    
-      <img src={image} 
-      alt='piece-img'
-      className={`x-${x_coordinate} y-${y_coordinate} w-24 h-24 absolute`} 
 
-      draggable 
-      onDragStart={handleDrag}
-      
-      
-      
-      />
-        
-    
+  return (
+    <img
+      src={image}
+      alt="piece-img"
+      className={`x-${x_coordinate} y-${y_coordinate} w-24 h-24 absolute`}
+      draggable
+      onDragStart={(e) => handleDrag(e)}
+    />
   );
 }
 

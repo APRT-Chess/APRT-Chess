@@ -1,16 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useEffect, useState } from "react";
-import { blackBishop, blackKing, blackKnight, blackPawn, blackQueen, blackRook, whiteBishop, whiteKing, whiteKnight, whitePawn, whiteQueen, whiteRook } from "../utils/ChessPieces";
+import {
+  blackBishop,
+  blackKing,
+  blackKnight,
+  blackPawn,
+  blackQueen,
+  blackRook,
+  whiteBishop,
+  whiteKing,
+  whiteKnight,
+  whitePawn,
+  whiteQueen,
+  whiteRook,
+} from "../utils/ChessPieces";
 import Piece from "./Piece";
 
-
-type Piece = string
+type Piece = string;
 
 const Board = () => {
 
   const [boardState,setBoardState] = useState< Piece[][]>([]);
-
 
   function setBoard() {
     const pieces:Piece[][] = [
@@ -26,45 +37,65 @@ const Board = () => {
     setBoardState(pieces)
   }
   
-
   useEffect(()=>{
     setBoard();
   },[])
+
+  function validMove(fromX: number, fromY: number, toX: number, toY: number) {
+    // okee move logic bim bim bambam
+    return true;
+  }
+
+  function onDropHandler(
+    e: React.DragEvent<HTMLDivElement>,
+    toX: number,
+    toY: number
+  ) {
+    e.preventDefault();
+    const initialCoords = e.dataTransfer.getData("text/plain");
+    const [fromX, fromY] = initialCoords.split("-").map(Number);
+    console.log("from", fromX, fromY);
+    console.log("to", toX, toY);
+
+    if (validMove(fromX, fromY, toX, toY)) {
+      const updatedBoard: Piece[][] = [...boardState];
+      updatedBoard[toX][toY] = updatedBoard[fromX][fromY];
+      updatedBoard[fromX][fromY] = "";
+      setBoardState(updatedBoard);
+    }
+  }
+
   const board = [];
- 
-      
-      let image = undefined;
 
-      for(let row = 0 ;row < boardState.length;row++)
-      {
-        for(let col = 0 ;col < boardState[0].length;col++)
-        {
-          let color = col + row;
-          image = boardState[row][col]
-          board.push(
-            <div
-              className={`inline-flex w-28 h-28 items-center justify-center select-none 
+  let image = undefined;
+
+  for (let row = 0; row < boardState.length; row++) {
+    for (let col = 0; col < boardState[0].length; col++) {
+      const color = col + row;
+      image = boardState[row][col];
+      board.push(
+        <div
+          className={`inline-flex w-28 h-28 items-center justify-center select-none 
               x-coordinate-${row} y-coordinate-${col}  
-              ${
-                color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"
-              }`}
-            onDrop = {(e)=>console.log("dropped:",e.target)}
-            onDragOver={(e)=>e.preventDefault()}
-            
-            >
-              {image && <Piece image={image} x_coordinate={row} y_coordinate={col} boardState = {boardState}></Piece>}
-            </div>
-          );
-        }
-      }
+              ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}`}
+          onDrop={(e) => onDropHandler(e, row, col)}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          {image && (
+            <Piece image={image} x_coordinate={row} y_coordinate={col}></Piece>
+          )}
+        </div>
+      );
+    }
+  }
 
-   
-      
-   
   return (
     <>
-      <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl" >
+      <div className="flex justify-center">
+
+      <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
         {board}
+      </div>
       </div>
     </>
   );
