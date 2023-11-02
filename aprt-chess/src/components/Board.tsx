@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, DragEvent } from "react";
 import {
   blackBishop,
   blackKing,
@@ -24,6 +24,7 @@ const Board = () => {
 
   const [boardState,setBoardState] = useState< Piece[][]>([]);
 
+  // function to set initial board state
   function setBoard() {
     const pieces:Piece[][] = [
       [blackRook,blackKnight,blackBishop,blackQueen,blackKing,blackBishop,blackKnight,blackRook],
@@ -38,37 +39,43 @@ const Board = () => {
     setBoardState(pieces)
   }
   
-  useEffect(()=>{
+  useEffect(() => {
     setBoard();
-  },[])
+  }, []);
 
-  function isValidMove(fromX: number, fromY: number, toX: number, toY: number,pieceName:string) {
-
-    return validate(fromX,fromY,toX,toY,pieceName);
+  // function to check if move is valid as per game rules
+  function isValidMove(
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+    pieceName: string
+  ) {
+    return validate(fromX, fromY, toX, toY, pieceName);
   }
 
   function onDropHandler(
-    e: React.DragEvent<HTMLDivElement>,
+    e: DragEvent<HTMLDivElement>,
     toX: number,
     toY: number
   ) {
     e.preventDefault();
-   
 
-    
-    
+    // extract initial position and piece name
     const initialCoords = e.dataTransfer.getData("text/plain");
-    let [fromX, fromY,pieceName] = initialCoords.split("-").map((item):number|string=>item);
+    let [fromX, fromY, pieceName] = initialCoords
+      .split("-")
+      .map((item): number | string => item);
     fromX = +fromX;
     fromY = +fromY;
 
-    const piece = pieceName.toString()
+    const piece = pieceName.toString();
     console.log("from", fromX, fromY);
-    console.log("piece:",piece);
+    console.log("piece:", piece);
     console.log("to", toX, toY);
 
-
-    if (isValidMove(fromX, fromY, toX, toY,piece)) {
+    // if move is valid update the board state
+    if (isValidMove(fromX, fromY, toX, toY, piece)) {
       const updatedBoard: Piece[][] = [...boardState];
       updatedBoard[toX][toY] = updatedBoard[fromX][fromY];
       updatedBoard[fromX][fromY] = "";
@@ -76,15 +83,17 @@ const Board = () => {
     }
   }
 
-  const board = [];
+  const boardJSX = [];
 
   let image = undefined;
-
+  // pushes the JSX for chessboard to board array
   for (let row = 0; row < boardState.length; row++) {
     for (let col = 0; col < boardState[0].length; col++) {
+      // if i+j is even box is dark
+      // else it is light
       const color = col + row;
       image = boardState[row][col];
-      board.push(
+      boardJSX.push(
         <div
           className={`inline-flex w-28 h-28 items-center justify-center select-none 
               x-coordinate-${row} y-coordinate-${col}  
@@ -103,10 +112,9 @@ const Board = () => {
   return (
     <>
       <div className="flex justify-center">
-
-      <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
-        {board}
-      </div>
+        <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
+          {boardJSX}
+        </div>
       </div>
     </>
   );
