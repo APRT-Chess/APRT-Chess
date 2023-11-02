@@ -42,7 +42,7 @@ const Board = () => {
   },[])
 
   function validMove(fromX: number, fromY: number, toX: number, toY: number) {
-    // okee move logic bim bim bambam
+
     return true;
   }
 
@@ -52,10 +52,18 @@ const Board = () => {
     toY: number
   ) {
     e.preventDefault();
+   
+
+    
+    
     const initialCoords = e.dataTransfer.getData("text/plain");
-    const [fromX, fromY] = initialCoords.split("-").map(Number);
+    let [fromX, fromY,pieceName] = initialCoords.split("-").map((item):number|string=>item);
+    fromX = +fromX;
+    fromY = +fromY;
     console.log("from", fromX, fromY);
+    console.log("piece:",pieceName.toString());
     console.log("to", toX, toY);
+
 
     if (validMove(fromX, fromY, toX, toY)) {
       const updatedBoard: Piece[][] = [...boardState];
