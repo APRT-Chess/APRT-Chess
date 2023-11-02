@@ -16,6 +16,7 @@ import {
   whiteRook,
 } from "../utils/ChessPieces";
 import Piece from "./Piece";
+import { validate } from "../utils/validate";
 
 type Piece = string;
 
@@ -41,9 +42,9 @@ const Board = () => {
     setBoard();
   },[])
 
-  function validMove(fromX: number, fromY: number, toX: number, toY: number) {
-    // okee move logic bim bim bambam
-    return true;
+  function isValidMove(fromX: number, fromY: number, toX: number, toY: number,pieceName:string) {
+
+    return validate(fromX,fromY,toX,toY,pieceName);
   }
 
   function onDropHandler(
@@ -52,12 +53,22 @@ const Board = () => {
     toY: number
   ) {
     e.preventDefault();
+   
+
+    
+    
     const initialCoords = e.dataTransfer.getData("text/plain");
-    const [fromX, fromY] = initialCoords.split("-").map(Number);
+    let [fromX, fromY,pieceName] = initialCoords.split("-").map((item):number|string=>item);
+    fromX = +fromX;
+    fromY = +fromY;
+
+    const piece = pieceName.toString()
     console.log("from", fromX, fromY);
+    console.log("piece:",piece);
     console.log("to", toX, toY);
 
-    if (validMove(fromX, fromY, toX, toY)) {
+
+    if (isValidMove(fromX, fromY, toX, toY,piece)) {
       const updatedBoard: Piece[][] = [...boardState];
       updatedBoard[toX][toY] = updatedBoard[fromX][fromY];
       updatedBoard[fromX][fromY] = "";

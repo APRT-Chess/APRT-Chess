@@ -10,7 +10,10 @@ interface props {
 function Piece({ image, x_coordinate, y_coordinate }: props) {
 
   function handleDrag(e: React.DragEvent<HTMLImageElement>) {
-    e.dataTransfer.setData("text/plain", `${x_coordinate}-${y_coordinate}`);
+    let pathString = image.split("/");
+    let imageString = pathString[pathString.length-1];
+    let pieceName = imageString.split('.')[0];
+    e.dataTransfer.setData("text/plain", `${x_coordinate}-${y_coordinate}-${pieceName}`);
   }
 
   return (
