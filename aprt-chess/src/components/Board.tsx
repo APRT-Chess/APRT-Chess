@@ -51,7 +51,7 @@ const Board = () => {
     toY: number,
     pieceName: string
   ) {
-    return validate(fromX, fromY, toX, toY, pieceName);
+    return validate(fromX, fromY, toX, toY, pieceName, boardState);
   }
 
   function onDropHandler(
@@ -63,6 +63,7 @@ const Board = () => {
 
     // extract initial position and piece name
     const initialCoords = e.dataTransfer.getData("text/plain");
+    // eslint-disable-next-line prefer-const
     let [fromX, fromY, pieceName] = initialCoords
       .split("-")
       .map((item): number | string => item);
@@ -95,6 +96,7 @@ const Board = () => {
       image = boardState[row][col];
       boardJSX.push(
         <div
+          key={`${row}-${col}`}
           className={`inline-flex w-28 h-28 items-center justify-center select-none 
               x-coordinate-${row} y-coordinate-${col}  
               ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}`}
