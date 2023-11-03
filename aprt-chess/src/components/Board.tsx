@@ -72,14 +72,14 @@ const Board = () => {
 
     const piece = pieceName.toString();
     console.log("from", fromX, fromY);
-    console.log("piece:", piece);
+    // console.log("piece:", piece);
     console.log("to", toX, toY);
 
     // if move is valid update the board state
     if (isValidMove(fromX, fromY, toX, toY, piece)) {
       const updatedBoard: Piece[][] = [...boardState];
-      updatedBoard[toX][toY] = updatedBoard[fromX][fromY];
-      updatedBoard[fromX][fromY] = "";
+      updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
+      updatedBoard[fromY][fromX] = "";
       setBoardState(updatedBoard);
     }
   }
@@ -96,15 +96,15 @@ const Board = () => {
       image = boardState[row][col];
       boardJSX.push(
         <div
-          key={`${row}-${col}`}
+          key={`${col}-${row}`}
           className={`inline-flex w-28 h-28 items-center justify-center select-none 
-              x-coordinate-${row} y-coordinate-${col}  
+              x-coordinate-${col} y-coordinate-${row}  
               ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}`}
-          onDrop={(e) => onDropHandler(e, row, col)}
+          onDrop={(e) => onDropHandler(e, col, row)}
           onDragOver={(e) => e.preventDefault()}
         >
           {image && (
-            <Piece image={image} x_coordinate={row} y_coordinate={col}></Piece>
+            <Piece image={image} x_coordinate={col} y_coordinate={row}></Piece>
           )}
         </div>
       );
