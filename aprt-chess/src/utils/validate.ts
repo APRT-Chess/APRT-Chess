@@ -1,13 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+function isOccupied(x: number, y: number, boardState: string[][]): boolean {
+  if (boardState[x][y]) 
+    return true;
+  else return false;
+}
+
+// apoorva: pawn king queen
+// rajeev: rook bishop knight
+
 export function validate(
   fromX: number,
   fromY: number,
   toX: number,
   toY: number,
-  pieceName: string
+  pieceName: string,
+  boardState: string[][]
 ): boolean {
-    
+  console.log("is occupied:", isOccupied(toX, toY, boardState));
+
   switch (pieceName) {
     case "wP":
       console.log("its a white pawn");
