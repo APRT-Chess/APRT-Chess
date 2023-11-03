@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// apoorva: pawn king queen
+// rajeev: rook bishop knight
 
+type PieceColor = 'w' | 'b';
+
+// all utility function go here
+
+// return true if a tile is occupied
 function isOccupied(x: number, y: number, boardState: string[][]): boolean {
-  if (boardState[x][y]) 
+  if (boardState[y][x]) 
     return true;
   else return false;
 }
 
-// apoorva: pawn king queen
-// rajeev: rook bishop knight
 
+
+// the switch case which trigges the correct validation logic
 export function validate(
   fromX: number,
   fromY: number,
@@ -34,6 +41,7 @@ export function validate(
       break;
     case "wR":
       console.log("its a white rook");
+      // return checkRook(fromX, fromY, toX, toY, 'w')
       break;
     case "wB":
       console.log("its a white bishop");
@@ -62,4 +70,24 @@ export function validate(
   }
 
   return true;
+}
+
+// all move validation function go here
+// naming convention `check${PieceName}`
+
+function checkRook(
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number,
+  pieceColor: PieceColor
+): boolean {
+  if (
+    (toX - fromX !== 0 && toY - fromY === 0) ||
+    (toX - fromX === 0 && toY - fromY !== 0)
+  ) {
+    return true;
+  }
+  console.log("invalid rook move");
+  return false;
 }
