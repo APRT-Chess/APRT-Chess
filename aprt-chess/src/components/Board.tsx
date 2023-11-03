@@ -72,7 +72,7 @@ const Board = () => {
 
     const piece = pieceName.toString();
     console.log("from", fromX, fromY);
-    console.log("piece:", piece);
+    // console.log("piece:", piece);
     console.log("to", toX, toY);
 
     // if move is valid update the board state
