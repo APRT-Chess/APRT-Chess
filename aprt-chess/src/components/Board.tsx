@@ -76,7 +76,7 @@ const Board = () => {
     console.log("to", toX, toY);
 
     // if move is valid update the board state
-    if (isValidMove(fromX, fromY, toX, toY, piece)) {
+    if (validate(fromX, fromY, toX, toY, piece, boardState)) {
       const updatedBoard: Piece[][] = [...boardState];
       updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
       updatedBoard[fromY][fromX] = "";

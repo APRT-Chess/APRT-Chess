@@ -41,7 +41,7 @@ function isPathClear(
   else if (toY - fromY === 0) {
     const horizontalDist = Math.abs(toX - fromX);
     for (let i = 1; i < horizontalDist; i++) {
-      const multiplier = toX < fromY ? -1 : 1;
+      const multiplier = toX < fromX ? -1 : 1;
       const passedTile = fromX + i * multiplier;
       if (boardState[fromY][passedTile]) {
         console.log("blocked by other piece");
