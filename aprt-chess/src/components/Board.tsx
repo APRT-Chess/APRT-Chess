@@ -43,17 +43,6 @@ const Board = () => {
     setBoard();
   }, []);
 
-  // function to check if move is valid as per game rules
-  function isValidMove(
-    fromX: number,
-    fromY: number,
-    toX: number,
-    toY: number,
-    pieceName: string
-  ) {
-    return validate(fromX, fromY, toX, toY, pieceName, boardState);
-  }
-
   function onDropHandler(
     e: DragEvent<HTMLDivElement>,
     toX: number,
