@@ -2,7 +2,6 @@
 // apoorva: pawn king queen
 // rajeev: rook bishop knight
 
-import { isPathClear } from "./pathClear";
 import { validateQueenMove } from "./pieceValidation/queen";
 import { validateRookMove } from "./pieceValidation/rook";
 
@@ -10,15 +9,10 @@ export type PieceColor = "w" | "b";
 
 // all utility function go here
 
-// return true if a tile is occupied
+// isOccupied returns true if a tile is occupied
 function isOccupied(x: number, y: number, boardState: string[][]): boolean {
-  if (boardState[y][x])
-    return true;
-  else
-    return false;
+  return !!boardState[y][x];
 }
-
-
 
 // the switch case which trigges the correct validation logic
 export function validate(
@@ -45,8 +39,8 @@ export function validate(
     case "wN":
       console.log("its a white knight");
       break;
-      // case "wR":
-      break;
+    case "wR":
+      return validateRookMove(fromX, fromY, toX, toY, boardState, "w");
     case "wB":
       console.log("its a white bishop");
       break;
@@ -63,7 +57,6 @@ export function validate(
       console.log("its a black knight");
       break;
     case "bR":
-      // console.log("its a black rook");
       return validateRookMove(fromX, fromY, toX, toY, boardState, "b");
     case "bB":
       console.log("its a black bishop");
@@ -75,9 +68,3 @@ export function validate(
 
   return true;
 }
-
-// all move validation function go here
-// naming convention `validate${PieceName}Move`
-
-
-//TODO: remove this and implement the specific functions for specific pieces from pieceValidation Directory

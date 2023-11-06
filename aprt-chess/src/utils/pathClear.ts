@@ -8,6 +8,7 @@ export function isPathClear(
     toY: number,
     boardState: string[][]
   ): boolean {
+  console.log('warning: isPathClear is no longer maintained');
     // if path is vertical
     if (toX - fromX === 0) {
       const verticalDist = Math.abs(toY - fromY);
