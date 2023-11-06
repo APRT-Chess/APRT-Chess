@@ -2,60 +2,23 @@
 // apoorva: pawn king queen
 // rajeev: rook bishop knight
 
-type PieceColor = "w" | "b";
+import { isPathClear } from "./pathClear";
+import { validateQueenMove } from "./pieceValidation/queen";
+import { validateRookMove } from "./pieceValidation/rook";
+
+export type PieceColor = "w" | "b";
 
 // all utility function go here
 
 // return true if a tile is occupied
 function isOccupied(x: number, y: number, boardState: string[][]): boolean {
-  if (boardState[y][x]) 
+  if (boardState[y][x])
     return true;
-  else 
+  else
     return false;
 }
 
-// returns true if path is clear
-// NOTE it will only work for straight & diagonal paths
-// else it will return false
-function isPathClear(
-  fromX: number,
-  fromY: number,
-  toX: number,
-  toY: number,
-  boardState: string[][]
-): boolean {
-  // if path is vertical
-  if (toX - fromX === 0) {
-    const verticalDist = Math.abs(toY - fromY);
-    for (let i = 1; i < verticalDist; i++) {
-      const multiplier = toY < fromY ? -1 : 1;
-      const passedTile = fromY + i * multiplier;
-      if (boardState[passedTile][fromX]) {
-        console.log("blocked by other piece");
-        return false;
-      }
-    }
-    return true;
-  }
-  // if path is horizontal
-  else if (toY - fromY === 0) {
-    const horizontalDist = Math.abs(toX - fromX);
-    for (let i = 1; i < horizontalDist; i++) {
-      const multiplier = toX < fromX ? -1 : 1;
-      const passedTile = fromX + i * multiplier;
-      if (boardState[fromY][passedTile]) {
-        console.log("blocked by other piece");
-        return false;
-      }
-    }
-    return true;
-  }
-  // if path is diagonal
-  else if (Math.abs(toY - fromY - toX + fromX) === 0) {
-    console.log("implement on you own lol");
-  }
-  return false;
-}
+
 
 // the switch case which trigges the correct validation logic
 export function validate(
@@ -76,13 +39,14 @@ export function validate(
       console.log("its a white king");
       break;
     case "wQ":
-      console.log("its a white queen");
-      break;
+      // console.log("its a white queen");
+      return validateQueenMove(fromX, fromY, toX, toY, boardState, "w");
+
     case "wN":
       console.log("its a white knight");
       break;
-    case "wR":
-      return checkRook(fromX, fromY, toX, toY, boardState, "w");
+      // case "wR":
+      break;
     case "wB":
       console.log("its a white bishop");
       break;
@@ -99,8 +63,8 @@ export function validate(
       console.log("its a black knight");
       break;
     case "bR":
-      console.log("its a black rook");
-      return checkRook(fromX, fromY, toX, toY, boardState, "b");
+      // console.log("its a black rook");
+      return validateRookMove(fromX, fromY, toX, toY, boardState, "b");
     case "bB":
       console.log("its a black bishop");
       break;
@@ -113,27 +77,7 @@ export function validate(
 }
 
 // all move validation function go here
-// naming convention `check${PieceName}`
+// naming convention `validate${PieceName}Move`
 
-function checkRook(
-  fromX: number,
-  fromY: number,
-  toX: number,
-  toY: number,
-  boardState: string[][],
-  pieceColor: PieceColor
-): boolean {
-  if (
-    (toX - fromX !== 0 && toY - fromY === 0) ||
-    (toX - fromX === 0 && toY - fromY !== 0)
-  ) {
-    if (isPathClear(fromX, fromY, toX, toY, boardState)) {
-      console.log("path is clear");
-      return true;
-    } 
-    else 
-      return false;
-  }
-  console.log("invalid rook move");
-  return false;
-}
+
+//TODO: remove this and implement the specific functions for specific pieces from pieceValidation Directory
