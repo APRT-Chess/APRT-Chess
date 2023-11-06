@@ -1,4 +1,4 @@
-import { rightDiagonalUpCheck } from '../pathChecks/rightDiagonalUpCheck' ;
+import { rightDiagonalCheck } from '../pathChecks/rightDiagonalCheck' ;
 import { PieceColor } from './../validate';
 
 export function validateQueenMove(
@@ -10,5 +10,5 @@ export function validateQueenMove(
     pieceColor: PieceColor
   ):boolean
   {
-    return rightDiagonalUpCheck(fromX,fromY,toX,toY,boardState);
+    return rightDiagonalCheck(fromX,fromY,toX,toY,boardState);
   }
