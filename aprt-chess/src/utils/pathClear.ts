@@ -69,3 +69,5 @@ export function isPathClear(
     // if the move doesn't fit in any of these it is invalid so return false;
     return false;
   }
+
+ 
