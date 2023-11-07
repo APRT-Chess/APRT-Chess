@@ -1,3 +1,5 @@
+import { validateCapture } from "./validateCaptureForOppositeColor";
+
 export function leftDiagonalCheck(
   fromX: number,
   fromY: number,
@@ -12,6 +14,9 @@ export function leftDiagonalCheck(
       let i = fromX - 1;
       let j = fromY + 1;
       while (i >= toX && j <= toY) {
+        if (i == toX && j == toY) {
+          return validateCapture(fromX, fromY, toX, toY, boardState);
+        }
         if (boardState[j][i]) {
           console.log(
             "downward left diagonal move blocked by a piece at x:",
@@ -34,6 +39,9 @@ export function leftDiagonalCheck(
       let i = fromX - 1;
       let j = fromY - 1;
       while (i >= toX && j >= toY) {
+        if (i == toX && j == toY) {
+          return validateCapture(fromX, fromY, toX, toY, boardState);
+        }
         if (boardState[j][i]) {
           console.log(
             "upwards left diagonal move blocked by a piece at x:",
