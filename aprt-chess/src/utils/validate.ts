@@ -33,9 +33,7 @@ export function validate(
       console.log("its a white king");
       break;
     case "wQ":
-      // console.log("its a white queen");
       return validateQueenMove(fromX, fromY, toX, toY, boardState, "w");
-
     case "wN":
       console.log("its a white knight");
       break;
@@ -51,8 +49,7 @@ export function validate(
       console.log("its a black king");
       break;
     case "bQ":
-      console.log("its a black queen");
-      break;
+      return validateQueenMove(fromX, fromY, toX, toY, boardState, "b");
     case "bN":
       console.log("its a black knight");
       break;
