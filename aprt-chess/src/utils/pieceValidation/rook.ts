@@ -1,5 +1,5 @@
 import { PieceColor } from "../validate";
-import { horizontalPathCheck } from "../pathChecks/horizontalCheck";
+import { validateHorizontalMove } from "../pathChecks/horizontalCheck";
 import { verticalPathCheck } from "../pathChecks/verticalCheck";
 
 export function validateRookMove(
@@ -12,7 +12,7 @@ export function validateRookMove(
 ): boolean {
   if (
     verticalPathCheck(fromX, fromY, toX, toY, boardState) ||
-    horizontalPathCheck(fromX, fromY, toX, toY, boardState)
+    validateHorizontalMove(fromX, fromY, toX, toY, boardState)
   ) {
     console.log("path is clear");
     return true;
