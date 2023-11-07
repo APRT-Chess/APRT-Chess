@@ -45,7 +45,7 @@ export function leftDiagonalCheck(
         }
 
         i--;
-        j++;
+        j--;
       }
 
       //if the control comes here, means no piece blocking the move;
