@@ -1,4 +1,6 @@
 import { PieceColor } from "../validate";
+import { leftDiagonalCheck } from "../pathChecks/leftDiagonalCheck";
+import { rightDiagonalCheck } from "../pathChecks/rightDiagonalCheck";
 
 export function validateBishopMove(
   fromX: number,
@@ -8,5 +10,7 @@ export function validateBishopMove(
   boardState: string[][],
   pieceColor: PieceColor
 ): boolean {
-  return true;
+  const rightDiaCheck = rightDiagonalCheck(fromX, fromY, toX, toY, boardState);
+  const leftDiaCheck = leftDiagonalCheck(fromX, fromY, toX, toY, boardState);
+  return rightDiaCheck || leftDiaCheck;
 }
