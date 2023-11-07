@@ -1,6 +1,6 @@
 // validate horizontal moves
 
-export function horizontalPathCheck(
+export function validateHorizontalMove(
   fromX: number,
   fromY: number,
   toX: number,

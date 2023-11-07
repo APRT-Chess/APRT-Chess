@@ -1,4 +1,4 @@
-import { validateHorizontalMove } from "../pathChecks/horizontal";
+import { validateHorizontalMove } from "../pathChecks/horizontalCheck";
 import { leftDiagonalCheck } from "../pathChecks/leftDiagonalCheck";
 import { rightDiagonalCheck } from "../pathChecks/rightDiagonalCheck";
 import { validateVerticalMove } from "../pathChecks/vertical";
