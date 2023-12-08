@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // apoorva: pawn king queen
-// rajeev: rook bishop knight
+// rajeev: rook bishop knight - all done
 
 import { validateQueenMove } from "./pieceValidation/queen";
 import { validateRookMove } from "./pieceValidation/rook";
-import { validateBishopMove } from './pieceValidation/bishop'
+import { validateBishopMove } from "./pieceValidation/bishop";
+import { validateKnightMove } from "./pieceValidation/knight";
 
 export type PieceColor = "w" | "b";
 
@@ -36,12 +36,10 @@ export function validate(
     case "wQ":
       return validateQueenMove(fromX, fromY, toX, toY, boardState, "w");
     case "wN":
-      console.log("its a white knight");
-      break;
+      return validateKnightMove(fromX, fromY, toX, toY, "w");
     case "wR":
       return validateRookMove(fromX, fromY, toX, toY, boardState, "w");
     case "wB":
-      console.log("its a white bishop");
       return validateBishopMove(fromX, fromY, toX, toY, boardState, "w");
     case "bP":
       console.log("its a black pawn");
@@ -52,8 +50,7 @@ export function validate(
     case "bQ":
       return validateQueenMove(fromX, fromY, toX, toY, boardState, "b");
     case "bN":
-      console.log("its a black knight");
-      break;
+      return validateKnightMove(fromX, fromY, toX, toY, "b");
     case "bR":
       return validateRookMove(fromX, fromY, toX, toY, boardState, "b");
     case "bB":
