@@ -14,10 +14,8 @@ export function validateRookMove(
     verticalPathCheck(fromX, fromY, toX, toY, boardState) ||
     horizontalPathCheck(fromX, fromY, toX, toY, boardState)
   ) {
-    console.log("path is clear");
     return true;
   } else {
-    console.log("invalid rook move");
     return false;
   }
 }
