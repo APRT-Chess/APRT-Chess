@@ -5,6 +5,7 @@ import { validateQueenMove } from "./pieceValidation/queen";
 import { validateRookMove } from "./pieceValidation/rook";
 import { validateBishopMove } from "./pieceValidation/bishop";
 import { validateKnightMove } from "./pieceValidation/knight";
+import { validateKingMove } from "./pieceValidation/king";
 
 export type PieceColor = "w" | "b";
 
@@ -31,8 +32,7 @@ export function validate(
       console.log("its a white pawn");
       break;
     case "wK":
-      console.log("its a white king");
-      break;
+      return validateKingMove(fromX, fromY, toX, toY, "w");
     case "wQ":
       return validateQueenMove(fromX, fromY, toX, toY, boardState, "w");
     case "wN":
@@ -45,8 +45,7 @@ export function validate(
       console.log("its a black pawn");
       break;
     case "bK":
-      console.log("its a black king");
-      break;
+      return validateKingMove(fromX, fromY, toX, toY, "b");
     case "bQ":
       return validateQueenMove(fromX, fromY, toX, toY, boardState, "b");
     case "bN":
@@ -54,7 +53,7 @@ export function validate(
     case "bR":
       return validateRookMove(fromX, fromY, toX, toY, boardState, "b");
     case "bB":
-      return validateBishopMove(fromX, fromY, toX, toY, boardState, "w");
+      return validateBishopMove(fromX, fromY, toX, toY, boardState, "b");
 
     default:
       break;
