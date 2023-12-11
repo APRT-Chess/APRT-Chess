@@ -6,10 +6,9 @@ import { validateRookMove } from "./pieceValidation/rook";
 import { validateBishopMove } from "./pieceValidation/bishop";
 import { validateKnightMove } from "./pieceValidation/knight";
 import { validateKingMove } from "./pieceValidation/king";
+import { validatePawnMove } from "./pieceValidation/pawn";
 
 export type PieceColor = "w" | "b";
-
-// all utility function go here
 
 // isOccupied returns true if a tile is occupied
 function isOccupied(x: number, y: number, boardState: string[][]): boolean {
@@ -29,8 +28,7 @@ export function validate(
 
   switch (pieceName) {
     case "wP":
-      console.log("its a white pawn");
-      break;
+      return validatePawnMove(fromX, fromY, toX, toY, boardState, "w");
     case "wK":
       return validateKingMove(fromX, fromY, toX, toY, "w");
     case "wQ":
