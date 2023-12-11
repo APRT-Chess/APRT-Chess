@@ -15,8 +15,8 @@ export function validatePawnMove(
   if (fromY === 6) {
     if (
       verticalPathCheck(fromX, fromY, toX, toY, boardState) &&
-      (fromY - toY === 1 || fromY - toY === 2) 
-    //   !boardState[toY][toX]
+      (fromY - toY === 1 || fromY - toY === 2) &&
+      !boardState[toY][toX]
     ) {
       return true;
     }

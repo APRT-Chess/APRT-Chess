@@ -50,7 +50,7 @@ test("pawn invalid diagonal move", () => {
 });
 
 test("pawn invalid 2 square move blocked by another piece", () => {
-  const board = [...emptyBoard];
+  const board = Array.from(emptyBoard, (row) => [...row]);
   board[5][2] = "block";
   const isValid = validatePawnMove(2, 6, 2, 4, board, "w");
 
@@ -58,9 +58,9 @@ test("pawn invalid 2 square move blocked by another piece", () => {
 });
 
 test("pawn invalid 2 square forward move kill", () => {
-    const board = [...emptyBoard];
-    board[4][2] = "block";
-    const isValid = validatePawnMove(2, 6, 2, 4, board, "w");
-  
-    expect(isValid).toBe(false);
-  })
+  const board = Array.from(emptyBoard, (row) => [...row]);
+  board[4][2] = "block";
+  const isValid = validatePawnMove(2, 6, 2, 4, board, "w");
+
+  expect(isValid).toBe(false);
+});
