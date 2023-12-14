@@ -1,3 +1,5 @@
+import { validateCapture } from "./validateCaptureForOppositeColor";
+
 //validate vertical moves;
 
 export function verticalPathCheck(
@@ -18,7 +20,8 @@ export function verticalPathCheck(
         return false;
       }
     }
-    return true;
+    
+    return validateCapture(fromX, fromY, toX, toY, boardState);
   }
   return false;
 }
