@@ -9,7 +9,6 @@ export function validateKingMove(
   fromY: number,
   toX: number,
   toY: number,
-  pieceColor: PieceColor
 ): boolean {
   const distance = Math.floor(calcDist(fromX, fromY, toX, toY));
   console.log(distance);
