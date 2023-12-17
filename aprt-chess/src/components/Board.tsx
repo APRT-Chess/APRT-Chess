@@ -25,9 +25,8 @@ type Piece = string;
 const Board = () => {
 
   const [boardState,setBoardState] = useState< Piece[][]>([]);
-  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>('w');
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>('b');
 
-  
   useEffect(() => {
     currentPlayerColor === "w"
       ? setBoardForWhite(setBoardState)
@@ -56,7 +55,7 @@ const Board = () => {
     console.log("to", toX, toY);
 
     // if move is valid update the board state
-    if (validate(fromX, fromY, toX, toY, piece, boardState)) {
+    if (validate(fromX, fromY, toX, toY, piece,currentPlayerColor, boardState)) {
       const updatedBoard: Piece[][] = [...boardState];
       updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
       updatedBoard[fromY][fromX] = "";

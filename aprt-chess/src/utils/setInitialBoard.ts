@@ -15,7 +15,7 @@ import {
 import { Piece } from '../types/global'
 import React from "react";
 
-  // functions to set initial board state
+// functions to set initial board state
 
 export function setBoardForWhite(setBoardState: React.Dispatch<React.SetStateAction<Piece[][]>>) {
   const pieces:Piece[][] = [
