@@ -16,31 +16,22 @@ import {
   whiteRook,
 } from "../utils/ChessPieces";
 import Piece from "./Piece";
+import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
+import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 
 type Piece = string;
 
 const Board = () => {
 
   const [boardState,setBoardState] = useState< Piece[][]>([]);
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>('w');
 
-  // function to set initial board state
-  function setBoard() {
-    const pieces:Piece[][] = [
-      [blackRook,blackKnight,blackBishop,blackQueen,blackKing,blackBishop,blackKnight,blackRook],
-      [blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn],
-      ["","","","","","","",""],
-      ["","","","","","","",""],
-      ["","","","","","","",""],
-      ["","","","","","","",""],
-      [whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn],
-      [whiteRook,whiteKnight,whiteBishop,whiteKing,whiteQueen,whiteBishop,whiteKnight,whiteRook],
-    ];
-    setBoardState(pieces)
-  }
   
   useEffect(() => {
-    setBoard();
+    currentPlayerColor === "w"
+      ? setBoardForWhite(setBoardState)
+      : setBoardForBlack(setBoardState);
   }, []);
 
   function onDropHandler(
