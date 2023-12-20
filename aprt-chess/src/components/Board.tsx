@@ -1,20 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useEffect, useState, DragEvent } from "react";
-import {
-  blackBishop,
-  blackKing,
-  blackKnight,
-  blackPawn,
-  blackQueen,
-  blackRook,
-  whiteBishop,
-  whiteKing,
-  whiteKnight,
-  whitePawn,
-  whiteQueen,
-  whiteRook,
-} from "../utils/ChessPieces";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
