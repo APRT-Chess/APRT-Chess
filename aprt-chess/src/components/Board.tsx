@@ -5,10 +5,16 @@ import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
 import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
+import Peer from "peerjs";
 
 type Piece = string;
 
-const Board = () => {
+interface props{
+  myPeer: Peer,
+  reciverID: string,
+}
+
+const Board = ({myPeer, reciverID}: props) => {
 
   const [boardState,setBoardState] = useState< Piece[][]>([]);
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>('b');

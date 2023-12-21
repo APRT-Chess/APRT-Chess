@@ -1,10 +1,14 @@
 import Peer, { BufferedConnection, DataConnection } from "peerjs";
 import { useEffect, useState } from "react";
 
-const Dashboard = () => {
-  let [myPeer, setMyPeer] = useState<Peer>(new Peer());
+interface props{
+  myPeer: Peer,
+  reciverID: string,
+  setReciverID: React.Dispatch<React.SetStateAction<string>>,
+}
+
+const Dashboard = ({myPeer, reciverID, setReciverID}: props) => {
   let [myID, setMyID] = useState<string>("");
-  let [reciverID, setReciverID] = useState<string>("");
 
   useEffect(() => {
     myPeer.on("open", function (id) {
@@ -13,6 +17,7 @@ const Dashboard = () => {
 
     myPeer.on("connection", (conn) => {
       console.log("connection successful");
+      // redirect to /board
       conn.on("data", (data) => {
         console.log("recieved", data);
       });
