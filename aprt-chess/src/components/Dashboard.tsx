@@ -1,33 +1,52 @@
-import Peer, { BufferedConnection, DataConnection } from "peerjs";
-import { useEffect, useState } from "react";
+import Peer, { DataConnection } from "peerjs";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { PieceColor } from "../types/global";
 
 interface props {
   myPeer: Peer;
   reciverID: string;
   setReciverID: React.Dispatch<React.SetStateAction<string>>;
   setIsCaller: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPlayerColor: PieceColor;
+  setCurrentPlayerColor: React.Dispatch<React.SetStateAction<PieceColor>>;
 }
 
-const Dashboard = ({ myPeer, reciverID, setReciverID, setIsCaller }: props) => {
+const Dashboard = ({
+  myPeer,
+  reciverID,
+  setReciverID,
+  setIsCaller,
+  currentPlayerColor,
+  setCurrentPlayerColor,
+}: props) => {
   let [myID, setMyID] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    myPeer.on("open", function (id) {
-      console.log("My peer ID is: " + id);
-    });
+  const currentPlayerColorRef = useRef(currentPlayerColor);
 
+  useEffect(() => {
+    currentPlayerColorRef.current = currentPlayerColor;
+  }, [currentPlayerColor]);
+
+  useEffect(() => {
+    // this part handles if player hosts the game
     myPeer.on("connection", (conn) => {
       console.log("connection successful");
-      // redirect to /board
-      navigate("/board");
-      conn.on("data", (data) => {
-        console.log("recieved", data);
+      conn.on("open", () => {
+        conn.on("data", (data) => {
+          console.log("from caller", data);
+        });
+        console.log("sending my color", currentPlayerColorRef.current);
+        conn.send(
+          JSON.stringify({ currentPlayerColor: currentPlayerColorRef.current })
+        );
+        navigate("/board");
       });
     });
   }, []);
 
+  // this part handles if player joins a game
   function joinRoom() {
     let connection: DataConnection = myPeer.connect(reciverID);
     if (!connection) {
@@ -36,7 +55,12 @@ const Dashboard = ({ myPeer, reciverID, setReciverID, setIsCaller }: props) => {
     }
     connection.on("open", () => {
       setIsCaller(true);
-      connection.send("initial connection succesful");
+      connection.on("data", (data) => {
+        console.log("from host", data);
+        const opponentColor: PieceColor = JSON.parse(data).currentPlayerColor;
+        setCurrentPlayerColor(opponentColor === "w" ? "b" : "w");
+      });
+      connection.send("test message from caller");
       navigate("/board");
     });
   }
@@ -59,12 +83,37 @@ const Dashboard = ({ myPeer, reciverID, setReciverID, setIsCaller }: props) => {
       </div>
       {myID ? (
         <div>
+          <div className="mb-4">
+            <button
+              className={`${
+                currentPlayerColor === "w" ? "bg-blue-500" : "bg-gray-300"
+              } text-white px-4 py-2 rounded mx-auto inline mr-2`}
+              onClick={() => setCurrentPlayerColor("w")}
+            >
+              White
+            </button>
+
+            <button
+              className={`${
+                currentPlayerColor === "b" ? "bg-black" : "bg-gray-300"
+              } text-white px-4 py-2 rounded mx-auto inline`}
+              onClick={() => setCurrentPlayerColor("b")}
+            >
+              Black
+            </button>
+          </div>
           <div>{myID}</div>
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded mx-auto block"
+            className="bg-blue-500 text-white px-4 py-2 rounded mx-auto my-4 block"
             onClick={copyToClipboard}
           >
             Copy Code
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded mx-auto my-4 block"
+            onClick={() => setMyID("")}
+          >
+            Back
           </button>
         </div>
       ) : (

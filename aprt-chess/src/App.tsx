@@ -4,11 +4,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Board from "./components/Board";
 import { Peer } from "peerjs";
+import { PieceColor } from "./types/global";
 
 function App() {
   let [myPeer, setMyPeer] = useState<Peer>(new Peer());
   let [reciverID, setReciverID] = useState<string>("");
   let [isCaller, setIsCaller] = useState<boolean>(false);
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("w");
 
   return (
     <BrowserRouter>
@@ -21,6 +23,8 @@ function App() {
               reciverID={reciverID}
               setReciverID={setReciverID}
               setIsCaller={setIsCaller}
+              currentPlayerColor={currentPlayerColor}
+              setCurrentPlayerColor={setCurrentPlayerColor}
             />
           }
         ></Route>
@@ -31,6 +35,7 @@ function App() {
               myPeer={myPeer}
               reciverID={reciverID}
               isCaller={isCaller}
+              currentPlayerColor={currentPlayerColor}
             />
           }
         />

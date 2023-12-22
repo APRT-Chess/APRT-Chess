@@ -13,11 +13,11 @@ interface props {
   myPeer: Peer;
   reciverID: string;
   isCaller: boolean;
+  currentPlayerColor: PieceColor;
 }
 
-const Board = ({ myPeer, reciverID, isCaller }: props) => {
+const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   const [boardState, setBoardState] = useState<Piece[][]>([]);
-  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("b");
 
   useEffect(() => {
     // listen for incoming data from caller
