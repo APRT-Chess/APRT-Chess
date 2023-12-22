@@ -1,14 +1,17 @@
 import Peer, { BufferedConnection, DataConnection } from "peerjs";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface props{
-  myPeer: Peer,
-  reciverID: string,
-  setReciverID: React.Dispatch<React.SetStateAction<string>>,
+interface props {
+  myPeer: Peer;
+  reciverID: string;
+  setReciverID: React.Dispatch<React.SetStateAction<string>>;
+  setIsCaller: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Dashboard = ({myPeer, reciverID, setReciverID}: props) => {
+const Dashboard = ({ myPeer, reciverID, setReciverID, setIsCaller }: props) => {
   let [myID, setMyID] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     myPeer.on("open", function (id) {
@@ -18,6 +21,7 @@ const Dashboard = ({myPeer, reciverID, setReciverID}: props) => {
     myPeer.on("connection", (conn) => {
       console.log("connection successful");
       // redirect to /board
+      navigate("/board");
       conn.on("data", (data) => {
         console.log("recieved", data);
       });
@@ -27,11 +31,13 @@ const Dashboard = ({myPeer, reciverID, setReciverID}: props) => {
   function joinRoom() {
     let connection: DataConnection = myPeer.connect(reciverID);
     if (!connection) {
-      console.log("connection could not be established");
+      console.error("connection could not be established");
       return;
     }
     connection.on("open", () => {
-      connection.send("helloooo");
+      setIsCaller(true);
+      connection.send("initial connection succesful");
+      navigate("/board");
     });
   }
 

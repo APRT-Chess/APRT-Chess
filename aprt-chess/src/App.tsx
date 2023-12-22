@@ -8,6 +8,7 @@ import { Peer } from "peerjs";
 function App() {
   let [myPeer, setMyPeer] = useState<Peer>(new Peer());
   let [reciverID, setReciverID] = useState<string>("");
+  let [isCaller, setIsCaller] = useState<boolean>(false);
 
   return (
     <BrowserRouter>
@@ -19,12 +20,19 @@ function App() {
               myPeer={myPeer}
               reciverID={reciverID}
               setReciverID={setReciverID}
+              setIsCaller={setIsCaller}
             />
           }
         ></Route>
         <Route
           path="/board"
-          element={<Board myPeer={myPeer} reciverID={reciverID} />}
+          element={
+            <Board
+              myPeer={myPeer}
+              reciverID={reciverID}
+              isCaller={isCaller}
+            />
+          }
         />
       </Routes>
     </BrowserRouter>

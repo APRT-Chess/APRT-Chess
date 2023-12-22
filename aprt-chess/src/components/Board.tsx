@@ -5,19 +5,41 @@ import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
 import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
-import Peer from "peerjs";
+import Peer, { DataConnection } from "peerjs";
 
 type Piece = string;
 
-interface props{
-  myPeer: Peer,
-  reciverID: string,
+interface props {
+  myPeer: Peer;
+  reciverID: string;
+  isCaller: boolean;
 }
 
-const Board = ({myPeer, reciverID}: props) => {
+const Board = ({ myPeer, reciverID, isCaller }: props) => {
+  const [boardState, setBoardState] = useState<Piece[][]>([]);
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("b");
 
-  const [boardState,setBoardState] = useState< Piece[][]>([]);
-  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>('b');
+  useEffect(() => {
+    // listen for incoming data from caller
+    myPeer.on("connection", (conn) => {
+      console.log("connection successful");
+      conn.on("data", (data) => {
+        console.log("recieved", data);
+      });
+    });
+
+    // if is caller is true send connection request to other peer
+    if (isCaller) {
+      let connection: DataConnection = myPeer.connect(reciverID);
+      if (!connection) {
+        console.log("connection could not be established");
+        return;
+      }
+      connection.on("open", () => {
+        connection.send("starting game");
+      });
+    }
+  }, [myPeer, reciverID]);
 
   useEffect(() => {
     currentPlayerColor === "w"
@@ -47,7 +69,9 @@ const Board = ({myPeer, reciverID}: props) => {
     console.log("to", toX, toY);
 
     // if move is valid update the board state
-    if (validate(fromX, fromY, toX, toY, piece,currentPlayerColor, boardState)) {
+    if (
+      validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
+    ) {
       const updatedBoard: Piece[][] = [...boardState];
       updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
       updatedBoard[fromY][fromX] = "";
