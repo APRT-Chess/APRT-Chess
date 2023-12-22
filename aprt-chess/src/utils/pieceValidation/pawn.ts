@@ -1,4 +1,5 @@
-import { PieceColor } from "../validate";
+// import { PieceColor } from "../validate";
+import { validateCapture } from "../pathChecks/validateCaptureForOppositeColor";
 import { verticalPathCheck } from "../pathChecks/verticalCheck";
 
 // only move by 2 or 1 blocks done
@@ -28,6 +29,10 @@ export function validatePawnMove(
       !boardState[toY][toX]
     ) {
       return true;  
+    }
+    // for diagonal move to left or right by one square for capture only
+    if(fromY-toY === 1 && Math.abs(fromX -toX) === 1 && boardState[toY][toX]){
+      return validateCapture(fromX,fromY,toX,toY,boardState); //bascially to make the one square dia move, that square must be occupied with opposite color piece
     }
   }
   return false;

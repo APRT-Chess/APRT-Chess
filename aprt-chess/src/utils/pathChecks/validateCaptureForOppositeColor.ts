@@ -1,4 +1,4 @@
-import { PieceColor } from "../validate";
+
 
 function getPieceColor(x: number, y: number, boardState: string[][]) {
   // piece names are stored as urls in boardState

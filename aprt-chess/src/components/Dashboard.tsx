@@ -55,7 +55,7 @@ const Dashboard = ({
     }
     connection.on("open", () => {
       setIsCaller(true);
-      connection.on("data", (data) => {
+      connection.on("data", (data:any) => {
         console.log("from host", data);
         const opponentColor: PieceColor = JSON.parse(data).currentPlayerColor;
         setCurrentPlayerColor(opponentColor === "w" ? "b" : "w");
