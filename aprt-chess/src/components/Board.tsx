@@ -6,6 +6,7 @@ import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
 import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 import Peer, { DataConnection } from "peerjs";
+import { useBoard } from "../contexts/BoardContext";
 
 type Piece = string;
 
@@ -17,7 +18,7 @@ interface props {
 }
 
 const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
-  const [boardState, setBoardState] = useState<Piece[][]>([]);
+  const {boardState,setBoardState} = useBoard();
 
   useEffect(() => {
     // listen for incoming data from caller
@@ -47,6 +48,13 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
       : setBoardForBlack(setBoardState);
   }, []);
 
+  function updateBoard(fromX:number,fromY:number,toX:number,toY:number){
+    const updatedBoard: Piece[][] = [...boardState];
+      updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
+      updatedBoard[fromY][fromX] = "";
+      setBoardState(updatedBoard);
+  }
+
   function onDropHandler(
     e: DragEvent<HTMLDivElement>,
     toX: number,
@@ -72,10 +80,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
     if (
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
-      const updatedBoard: Piece[][] = [...boardState];
-      updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
-      updatedBoard[fromY][fromX] = "";
-      setBoardState(updatedBoard);
+        updateBoard(fromX,fromY,toX,toY)
     }
   }
 
