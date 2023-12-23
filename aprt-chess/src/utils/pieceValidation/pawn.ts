@@ -32,7 +32,8 @@ export function validatePawnMove(
     }
     // for diagonal move to left or right by one square for capture only
     if(fromY-toY === 1 && Math.abs(fromX -toX) === 1 && boardState[toY][toX]){
-      return validateCapture(fromX,fromY,toX,toY,boardState); //bascially to make the one square dia move, that square must be occupied with opposite color piece
+      return validateCapture(fromX,fromY,toX,toY,boardState); 
+      //bascially to make the one square dia move, that square must be occupied with opposite color piece
     }
   }
   return false;
