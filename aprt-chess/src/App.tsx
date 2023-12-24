@@ -5,6 +5,7 @@ import Dashboard from "./components/Dashboard";
 import Board from "./components/Board";
 import { Peer } from "peerjs";
 import { PieceColor } from "./types/global";
+import { BoardProvider } from "./contexts/BoardContext";
 
 function App() {
   let [myPeer, setMyPeer] = useState<Peer>(new Peer());
@@ -13,27 +14,29 @@ function App() {
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("w");
 
   return (
+    <BoardProvider>
+
     <BrowserRouter>
       <Routes>
         <Route
           path="/dashboard"
           element={
             <Dashboard
-              myPeer={myPeer}
-              reciverID={reciverID}
-              setReciverID={setReciverID}
-              setIsCaller={setIsCaller}
-              currentPlayerColor={currentPlayerColor}
+            myPeer={myPeer}
+            reciverID={reciverID}
+            setReciverID={setReciverID}
+            setIsCaller={setIsCaller}
+            currentPlayerColor={currentPlayerColor}
               setCurrentPlayerColor={setCurrentPlayerColor}
             />
           }
-        ></Route>
+          ></Route>
         <Route
           path="/board"
           element={
             <Board
-              myPeer={myPeer}
-              reciverID={reciverID}
+            myPeer={myPeer}
+            reciverID={reciverID}
               isCaller={isCaller}
               currentPlayerColor={currentPlayerColor}
             />
@@ -41,6 +44,7 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+            </BoardProvider>
   );
 }
 
