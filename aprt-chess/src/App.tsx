@@ -25,6 +25,7 @@ function App() {
             myPeer={myPeer}
             reciverID={reciverID}
             setReciverID={setReciverID}
+            isCaller={isCaller}
             setIsCaller={setIsCaller}
             currentPlayerColor={currentPlayerColor}
               setCurrentPlayerColor={setCurrentPlayerColor}

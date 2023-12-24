@@ -7,6 +7,7 @@ interface props {
   myPeer: Peer;
   reciverID: string;
   setReciverID: React.Dispatch<React.SetStateAction<string>>;
+  isCaller: boolean;
   setIsCaller: React.Dispatch<React.SetStateAction<boolean>>;
   currentPlayerColor: PieceColor;
   setCurrentPlayerColor: React.Dispatch<React.SetStateAction<PieceColor>>;
@@ -16,6 +17,7 @@ const Dashboard = ({
   myPeer,
   reciverID,
   setReciverID,
+  isCaller,
   setIsCaller,
   currentPlayerColor,
   setCurrentPlayerColor,
@@ -55,15 +57,20 @@ const Dashboard = ({
     }
     connection.on("open", () => {
       setIsCaller(true);
-      connection.on("data", (data:any) => {
+      connection.on("data", (data: any) => {
         console.log("from host", data);
         const opponentColor: PieceColor = JSON.parse(data).currentPlayerColor;
         setCurrentPlayerColor(opponentColor === "w" ? "b" : "w");
       });
       connection.send("test message from caller");
-      navigate("/board");
     });
   }
+
+  useEffect(() => {
+    if (isCaller) {
+      navigate("/board");
+    }
+  }, [currentPlayerColor]);
 
   function copyToClipboard() {
     navigator.clipboard.writeText(myID);
