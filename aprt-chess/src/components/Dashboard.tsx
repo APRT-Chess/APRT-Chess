@@ -34,12 +34,12 @@ const Dashboard = ({
   useEffect(() => {
     // this part handles if player hosts the game
     myPeer.on("connection", (conn) => {
-      console.log("connection successful");
+      console.log("connection successful from dashboard");
       conn.on("open", () => {
         conn.on("data", (data) => {
           console.log("from caller", data);
         });
-        console.log("sending my color", currentPlayerColorRef.current);
+        // console.log("sending my color", currentPlayerColorRef.current);
         conn.send(
           JSON.stringify({ currentPlayerColor: currentPlayerColorRef.current })
         );
@@ -62,7 +62,7 @@ const Dashboard = ({
         const opponentColor: PieceColor = JSON.parse(data).currentPlayerColor;
         setCurrentPlayerColor(opponentColor === "w" ? "b" : "w");
       });
-      connection.send("test message from caller");
+      // connection.send("test message from caller");
     });
   }
 

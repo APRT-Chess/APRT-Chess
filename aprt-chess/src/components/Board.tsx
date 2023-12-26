@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useEffect, useState, DragEvent } from "react";
+import { useEffect, useRef, DragEvent } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
@@ -18,24 +18,36 @@ interface props {
 }
 
 const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
-  const {boardState,setBoardState} = useBoard();
+  const { boardState, setBoardState } = useBoard();
+  const connectionRef = useRef<DataConnection | null>(null);
 
   useEffect(() => {
     // listen for incoming data from caller
-    myPeer.on("connection", (conn) => {
-      console.log("connection successful");
-      conn.on("data", (data) => {
-        console.log("recieved", data);
+    if (!isCaller) {
+      myPeer.on("connection", (conn: DataConnection) => {
+        console.log("connection successful");
+        connectionRef.current = conn;
+        conn.on("data", (data: any) => {
+          const parsedData = JSON.parse(data);
+          console.log("recieved", parsedData);
+          // if(parsedData?.type === 'update_board') {
+          //   setBoardState(parsedData.boardState)
+          // }
+        });
+        conn.on("open", () => {
+          conn.send("test msgg");
+        });
       });
-    });
+    }
 
     // if is caller is true send connection request to other peer
-    if (isCaller) {
+    else {
       let connection: DataConnection = myPeer.connect(reciverID);
       if (!connection) {
         console.log("connection could not be established");
         return;
       }
+      connectionRef.current = connection;
       connection.on("open", () => {
         connection.send("starting game");
       });
@@ -48,11 +60,11 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
       : setBoardForBlack(setBoardState);
   }, []);
 
-  function updateBoard(fromX:number,fromY:number,toX:number,toY:number){
+  function updateBoard(fromX: number, fromY: number, toX: number, toY: number) {
     const updatedBoard: Piece[][] = [...boardState];
-      updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
-      updatedBoard[fromY][fromX] = "";
-      setBoardState(updatedBoard);
+    updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
+    updatedBoard[fromY][fromX] = "";
+    setBoardState(updatedBoard);
   }
 
   function onDropHandler(
@@ -73,14 +85,22 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
 
     const piece = pieceName.toString();
     console.log("from", fromX, fromY);
-    // console.log("piece:", piece);
     console.log("to", toX, toY);
 
-    // if move is valid update the board state
+    // if move is valid update the board state & send it to other player
     if (
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
-        updateBoard(fromX,fromY,toX,toY)
+      updateBoard(fromX, fromY, toX, toY);
+      if (!connectionRef.current) {
+        console.log("Disconnected!!");
+        return;
+      }
+      const updatedBoardMsg = {
+        type: "update_board",
+        boardState,
+      };
+      connectionRef.current.send(JSON.stringify(updatedBoardMsg));
     }
   }
 
