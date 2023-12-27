@@ -7,6 +7,7 @@ import { validate } from "../utils/validate";
 import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 import Peer, { DataConnection } from "peerjs";
 import { useBoard } from "../contexts/BoardContext";
+import { flipBoard } from "../utils/mathFunctions";
 
 type Piece = string;
 
@@ -28,14 +29,18 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
         console.log("connection successful");
         connectionRef.current = conn;
         conn.on("data", (data: any) => {
-          const parsedData = JSON.parse(data);
-          console.log("recieved", parsedData);
-          // if(parsedData?.type === 'update_board') {
-          //   setBoardState(parsedData.boardState)
-          // }
+          try {
+            const parsedData = JSON.parse(data);
+            if(parsedData?.type === 'update_board') {
+              const flip = flipBoard(parsedData.boardState)
+              setBoardState(flip)
+            }
+          } catch {
+            console.warn("Error in JSON.parse")
+          }
         });
         conn.on("open", () => {
-          conn.send("test msgg");
+          conn.send("host ready");
         });
       });
     }
@@ -49,7 +54,18 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
       }
       connectionRef.current = connection;
       connection.on("open", () => {
-        connection.send("starting game");
+        connection.send("caller ready");
+        connection.on("data", (data: any) => {
+          try {
+            const parsedData = JSON.parse(data);
+            if(parsedData?.type === 'update_board') {
+              const flip = flipBoard(parsedData.boardState)
+              setBoardState(flip)
+            }
+          } catch {
+            console.warn("Error in JSON.parse")
+          }
+          });
       });
     }
   }, [myPeer, reciverID]);
