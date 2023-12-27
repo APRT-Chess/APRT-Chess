@@ -21,12 +21,11 @@ export function calcDist(
 }
 
 export function flipBoard(boardState: Piece[][]) {
-  const updatedBoard = structuredClone(boardState);
+  const updatedBoard = Array.from({ length: 8 }, () => Array(8).fill(""));
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
-      updatedBoard[8 - row][8 - col] = boardState[row][col];
-      updatedBoard[row][col] = '';
+      updatedBoard[7 - row][7 - col] = boardState[row][col];
     }
   }
-  return updatedBoard
+  return updatedBoard;
 }
