@@ -31,12 +31,12 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
         conn.on("data", (data: any) => {
           try {
             const parsedData = JSON.parse(data);
-            if(parsedData?.type === 'update_board') {
-              const flip = flipBoard(parsedData.boardState)
-              setBoardState(flip)
+            if (parsedData?.type === "update_board") {
+              const flip = flipBoard(parsedData.boardState);
+              setBoardState(flip);
             }
           } catch {
-            console.warn("Error in JSON.parse")
+            console.warn("Error in JSON.parse");
           }
         });
         conn.on("open", () => {
@@ -58,14 +58,14 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
         connection.on("data", (data: any) => {
           try {
             const parsedData = JSON.parse(data);
-            if(parsedData?.type === 'update_board') {
-              const flip = flipBoard(parsedData.boardState)
-              setBoardState(flip)
+            if (parsedData?.type === "update_board") {
+              const flip = flipBoard(parsedData.boardState);
+              setBoardState(flip);
             }
           } catch {
-            console.warn("Error in JSON.parse")
+            console.warn("Error in JSON.parse");
           }
-          });
+        });
       });
     }
   }, [myPeer, reciverID]);
@@ -112,6 +112,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
         console.log("Disconnected!!");
         return;
       }
+      // sending the updated board state to other player
       const updatedBoardMsg = {
         type: "update_board",
         boardState,

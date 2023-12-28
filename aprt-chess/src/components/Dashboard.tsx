@@ -39,7 +39,6 @@ const Dashboard = ({
         conn.on("data", (data) => {
           console.log("from caller", data);
         });
-        // console.log("sending my color", currentPlayerColorRef.current);
         conn.send(
           JSON.stringify({ currentPlayerColor: currentPlayerColorRef.current })
         );
@@ -62,7 +61,6 @@ const Dashboard = ({
         const opponentColor: PieceColor = JSON.parse(data).currentPlayerColor;
         setCurrentPlayerColor(opponentColor === "w" ? "b" : "w");
       });
-      // connection.send("test message from caller");
     });
   }
 
@@ -109,19 +107,25 @@ const Dashboard = ({
               Black
             </button>
           </div>
-          <div>{myID}</div>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded mx-auto my-4 block"
-            onClick={copyToClipboard}
-          >
-            Copy Code
-          </button>
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded mx-auto my-4 block"
-            onClick={() => setMyID("")}
-          >
-            Back
-          </button>
+          {currentPlayerColor ? (
+            <div>
+              <div>{myID}</div>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded mx-auto my-4 block"
+                onClick={copyToClipboard}
+              >
+                Copy Code
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded mx-auto my-4 block"
+                onClick={() => setMyID("")}
+              >
+                Back
+              </button>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </div>
       ) : (
         <div className="mb-4">

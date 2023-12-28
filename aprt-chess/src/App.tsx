@@ -11,41 +11,40 @@ function App() {
   let [myPeer, setMyPeer] = useState<Peer>(new Peer());
   let [reciverID, setReciverID] = useState<string>("");
   let [isCaller, setIsCaller] = useState<boolean>(false);
-  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("w");
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("");
 
   return (
     <BoardProvider>
-
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/dashboard"
-          element={
-            <Dashboard
-            myPeer={myPeer}
-            reciverID={reciverID}
-            setReciverID={setReciverID}
-            isCaller={isCaller}
-            setIsCaller={setIsCaller}
-            currentPlayerColor={currentPlayerColor}
-              setCurrentPlayerColor={setCurrentPlayerColor}
-            />
-          }
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/dashboard"
+            element={
+              <Dashboard
+                myPeer={myPeer}
+                reciverID={reciverID}
+                setReciverID={setReciverID}
+                isCaller={isCaller}
+                setIsCaller={setIsCaller}
+                currentPlayerColor={currentPlayerColor}
+                setCurrentPlayerColor={setCurrentPlayerColor}
+              />
+            }
           ></Route>
-        <Route
-          path="/board"
-          element={
-            <Board
-            myPeer={myPeer}
-            reciverID={reciverID}
-              isCaller={isCaller}
-              currentPlayerColor={currentPlayerColor}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-            </BoardProvider>
+          <Route
+            path="/board"
+            element={
+              <Board
+                myPeer={myPeer}
+                reciverID={reciverID}
+                isCaller={isCaller}
+                currentPlayerColor={currentPlayerColor}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </BoardProvider>
   );
 }
 

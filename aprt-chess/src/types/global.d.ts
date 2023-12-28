@@ -1,4 +1,4 @@
 type Piece = string;
-type PieceColor = "w" | "b";
+type PieceColor = "w" | "b" | "";
 
-export { Piece, PieceColor }
+export { Piece, PieceColor };
