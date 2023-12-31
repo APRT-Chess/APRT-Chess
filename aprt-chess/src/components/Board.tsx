@@ -1,3 +1,6 @@
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { useEffect, useRef, DragEvent, useState } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
@@ -6,6 +9,7 @@ import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 import Peer, { DataConnection } from "peerjs";
 import { useBoard } from "../contexts/BoardContext";
 import { flipBoard } from "../utils/mathFunctions";
+import PromotionToast from "./PromotionToast";
 
 type Piece = string;
 
@@ -16,9 +20,16 @@ interface props {
   currentPlayerColor: PieceColor;
 }
 
+export interface PromotionStats{
+  set:boolean;
+  xcord:number;
+  ycord:number;
+  color:"black"|"white"
+}
 const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   const { boardState, setBoardState } = useBoard();
   const connectionRef = useRef<DataConnection | null>(null);
+  const [promotionStats,setPromotionStats] = useState<PromotionStats>();
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
 
   useEffect(() => {
@@ -109,9 +120,21 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
 
     // if move is valid update the board state & send it to other player
     if (
-      isMyTurn &&
+       isMyTurn &&
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
+      console.log("piece:",piece)
+
+      //handle pawn promotion if it happens
+      if((piece==='wP'||piece==="bP")&& toY ===0)
+      {
+        setPromotionStats({
+          set:true,
+          color:piece==='wP'?"white":"black",
+          xcord:toX,
+          ycord:toY
+        })
+      }
       updateBoard(fromX, fromY, toX, toY);
       if (!connectionRef.current) {
         console.log("Disconnected!!");
@@ -157,6 +180,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   return (
     <>
       <div className="flex justify-center">
+        {promotionStats?.set &&<PromotionToast {...promotionStats}/>}
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>
