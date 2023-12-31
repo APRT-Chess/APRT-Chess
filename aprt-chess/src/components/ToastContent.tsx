@@ -1,12 +1,12 @@
 import { useBoard } from '../contexts/BoardContext';
 import { Piece } from '../types/global';
-import { blackBishop, blackKing, blackKnight, blackRook, whiteBishop, whiteKing, whiteKnight, whiteQueen, whiteRook } from '../utils/ChessPieces';
+import { blackBishop, blackKing, blackKnight, blackQueen, blackRook, whiteBishop, whiteKing, whiteKnight, whiteQueen, whiteRook } from '../utils/ChessPieces';
 
-const whitePieces = [whiteBishop,whiteKnight,whiteRook,whiteKing]
-const blackPieces = [blackBishop,blackKnight,blackRook,blackKing]
+const whitePieces = [whiteBishop,whiteKnight,whiteRook,whiteQueen]
+const blackPieces = [blackBishop,blackKnight,blackRook,blackQueen]
 
 
-const ToastContent = (props:{color:string,xcord:number,ycord:number})=>{
+const ToastContent = (props:{color:string,xcord:number,ycord:number,sendBoardState:Function})=>{
 
     const { boardState, setBoardState } = useBoard();
 
@@ -15,6 +15,8 @@ const ToastContent = (props:{color:string,xcord:number,ycord:number})=>{
         const shallowCopy:Piece[][] = [...boardState]
         shallowCopy[ycord][xcord] = pieceRef;
         setBoardState(shallowCopy)
+        props.sendBoardState();
+        
     }
     
     // show white piece toast if the pieces are white
@@ -25,7 +27,7 @@ const ToastContent = (props:{color:string,xcord:number,ycord:number})=>{
                     <div className='flex items-center justify-center'>
                         {whitePieces.map((imgsrc,index)=>{
                             return(
-                                <img src={imgsrc} key={index} alt="" className=' w-12 h-12  hover:bg-green-400' onClick={(e)=>promotePiece(imgsrc,props.xcord,props.ycord)} />
+                                <img src={imgsrc} key={index} alt="" className=' w-12 h-12  hover:bg-green-400' onClick={()=>promotePiece(imgsrc,props.xcord,props.ycord)} />
                             )
                         })}
                     </div>
@@ -38,7 +40,7 @@ const ToastContent = (props:{color:string,xcord:number,ycord:number})=>{
                     <div className='flex items-center justify-center'>
                         {blackPieces.map((imgsrc,index)=>{
                             return(
-                                <img src={imgsrc} key={index} alt="" className=' w-12 h-12  hover:bg-green-400'  />
+                                <img src={imgsrc} key={index} alt="" className=' w-12 h-12  hover:bg-green-400' onClick={()=>promotePiece(imgsrc,props.xcord,props.ycord)} />
                             )
                         })}
                     </div>
