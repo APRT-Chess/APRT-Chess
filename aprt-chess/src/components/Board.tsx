@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-import { useEffect, useRef, DragEvent } from "react";
+import { useEffect, useRef, DragEvent, useState } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
@@ -21,6 +19,7 @@ interface props {
 const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   const { boardState, setBoardState } = useBoard();
   const connectionRef = useRef<DataConnection | null>(null);
+  const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
 
   useEffect(() => {
     // listen for incoming data from caller
@@ -34,6 +33,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
             if (parsedData?.type === "update_board") {
               const flip = flipBoard(parsedData.boardState);
               setBoardState(flip);
+              setIsMyTurn(true)
             }
           } catch {
             console.warn("Error in JSON.parse");
@@ -61,6 +61,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
             if (parsedData?.type === "update_board") {
               const flip = flipBoard(parsedData.boardState);
               setBoardState(flip);
+              setIsMyTurn(true);
             }
           } catch {
             console.warn("Error in JSON.parse");
@@ -71,9 +72,12 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   }, [myPeer, reciverID]);
 
   useEffect(() => {
-    currentPlayerColor === "w"
-      ? setBoardForWhite(setBoardState)
-      : setBoardForBlack(setBoardState);
+    if (currentPlayerColor === "w") {
+      setBoardForWhite(setBoardState);
+      setIsMyTurn(true);
+    } else {
+      setBoardForBlack(setBoardState);
+    }
   }, []);
 
   function updateBoard(fromX: number, fromY: number, toX: number, toY: number) {
@@ -105,6 +109,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
 
     // if move is valid update the board state & send it to other player
     if (
+      isMyTurn &&
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
       updateBoard(fromX, fromY, toX, toY);
@@ -118,6 +123,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
         boardState,
       };
       connectionRef.current.send(JSON.stringify(updatedBoardMsg));
+      setIsMyTurn(false);
     }
   }
 
