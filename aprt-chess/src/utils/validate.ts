@@ -14,6 +14,8 @@ function isOccupied(x: number, y: number, boardState: string[][]): boolean {
 }
 
 // the switch case which trigges the correct validation logic
+
+
 export function validate(
   fromX: number,
   fromY: number,

@@ -18,7 +18,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/dashboard"
+            path="/"
             element={
               <Dashboard
                 myPeer={myPeer}
