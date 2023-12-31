@@ -98,6 +98,18 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
     setBoardState(updatedBoard);
   }
 
+  function sendBoardState()
+  {
+    const updatedBoardMsg = {
+      type: "update_board",
+      boardState,
+    };
+    if(connectionRef && connectionRef.current){
+      connectionRef.current.send(JSON.stringify(updatedBoardMsg));
+      setIsMyTurn(false);
+    }
+  }
+
   function onDropHandler(
     e: DragEvent<HTMLDivElement>,
     toX: number,
@@ -134,19 +146,17 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
           xcord:toX,
           ycord:toY
         })
+ 
       }
-      updateBoard(fromX, fromY, toX, toY);
+    
+        updateBoard(fromX, fromY, toX, toY);
+          
       if (!connectionRef.current) {
         console.log("Disconnected!!");
         return;
       }
       // sending the updated board state to other player
-      const updatedBoardMsg = {
-        type: "update_board",
-        boardState,
-      };
-      connectionRef.current.send(JSON.stringify(updatedBoardMsg));
-      setIsMyTurn(false);
+      sendBoardState();
     }
   }
 
@@ -180,7 +190,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   return (
     <>
       <div className="flex justify-center">
-        {promotionStats?.set &&<PromotionToast {...promotionStats}/>}
+        {promotionStats?.set &&<PromotionToast color={promotionStats.color} xcord={promotionStats.xcord} ycord={promotionStats.ycord} sendBoardState={sendBoardState}  />}
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>
