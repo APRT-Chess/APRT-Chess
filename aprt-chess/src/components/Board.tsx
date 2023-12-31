@@ -180,7 +180,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   return (
     <>
       <div className="flex justify-center">
-        {promotionStats?.set &&<PromotionToast {...promotionStats}/>}
+        {promotionStats?.set &&<PromotionToast {...promotionStats} />}
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>
