@@ -35,6 +35,9 @@ const Dashboard = ({
     // this part handles if player hosts the game
     myPeer.on("connection", (conn) => {
       console.log("connection successful from dashboard");
+      conn.on("error", (error) => {
+        console.error("Connection error:", error);
+      });
       conn.on("open", () => {
         conn.on("data", (data) => {
           console.log("from caller", data);
