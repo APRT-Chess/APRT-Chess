@@ -8,7 +8,17 @@ import { PieceColor } from "./types/global";
 import { BoardProvider } from "./contexts/BoardContext";
 
 function App() {
-  let [myPeer, setMyPeer] = useState<Peer>(new Peer());
+  let [myPeer, setMyPeer] = useState<Peer>(
+    new Peer({
+      config: {
+        iceServers: [
+          { url: "stun:stun1.l.google.com:19302" },
+          { url: "stun:stun2.l.google.com:19302" },
+          { url: "stun:stun1.l.google.com:19302" },
+        ],
+      },
+    })
+  );
   let [reciverID, setReciverID] = useState<string>("");
   let [isCaller, setIsCaller] = useState<boolean>(false);
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("");
