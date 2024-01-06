@@ -2,7 +2,6 @@ import { horizontalPathCheck } from "../pathChecks/horizontalCheck";
 import { leftDiagonalCheck } from "../pathChecks/leftDiagonalCheck";
 import { rightDiagonalCheck } from "../pathChecks/rightDiagonalCheck";
 import { verticalPathCheck } from "../pathChecks/verticalCheck";
-import { PieceColor } from "../validate";
 
 export function validateQueenMove(
   fromX: number,
