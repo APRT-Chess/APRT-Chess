@@ -67,9 +67,7 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on("greeting",(message)=>{
-      console.log(message);
-    })
+    
 
     return () => {
       socket.off('connect', onConnect);
