@@ -1,15 +1,13 @@
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useEffect, useRef, DragEvent, useState } from "react";
+import { useEffect, useState, DragEvent } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
 import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 import Peer, { DataConnection } from "peerjs";
 import { useBoard } from "../contexts/BoardContext";
-import { flipBoard } from "../utils/mathFunctions";
-import PromotionToast from "./PromotionToast";
+import { socket } from "../utils/socket/socket";
 
 type Piece = string;
 
@@ -20,94 +18,70 @@ interface props {
   currentPlayerColor: PieceColor;
 }
 
-export interface PromotionStats{
-  set:boolean;
-  xcord:number;
-  ycord:number;
-  color:"black"|"white"
-}
 const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
-  const { boardState, setBoardState } = useBoard();
-  const connectionRef = useRef<DataConnection | null>(null);
-  const [promotionStats,setPromotionStats] = useState<PromotionStats>();
-  const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
+  const {boardState,setBoardState,isConnected,setIsConnected} = useBoard();
 
+
+  //TODO:remove peer connection setup
   useEffect(() => {
     // listen for incoming data from caller
-    if (!isCaller) {
-      myPeer.on("connection", (conn: DataConnection) => {
-        console.log("connection successful");
-        connectionRef.current = conn;
-        conn.on("data", (data: any) => {
-          try {
-            const parsedData = JSON.parse(data);
-            if (parsedData?.type === "update_board") {
-              const flip = flipBoard(parsedData.boardState);
-              setBoardState(flip);
-              setIsMyTurn(true)
-            }
-          } catch {
-            console.warn("Error in JSON.parse");
-          }
-        });
-        conn.on("open", () => {
-          conn.send("host ready");
-        });
+    myPeer.on("connection", (conn) => {
+      console.log("connection successful");
+      conn.on("data", (data) => {
+        console.log("recieved", data);
       });
-    }
+    });
 
     // if is caller is true send connection request to other peer
-    else {
+    if (isCaller) {
       let connection: DataConnection = myPeer.connect(reciverID);
       if (!connection) {
         console.log("connection could not be established");
         return;
       }
-      connectionRef.current = connection;
       connection.on("open", () => {
-        connection.send("caller ready");
-        connection.on("data", (data: any) => {
-          try {
-            const parsedData = JSON.parse(data);
-            if (parsedData?.type === "update_board") {
-              const flip = flipBoard(parsedData.boardState);
-              setBoardState(flip);
-              setIsMyTurn(true);
-            }
-          } catch {
-            console.warn("Error in JSON.parse");
-          }
-        });
+        connection.send("starting game");
       });
     }
   }, [myPeer, reciverID]);
 
+
   useEffect(() => {
-    if (currentPlayerColor === "w") {
-      setBoardForWhite(setBoardState);
-      setIsMyTurn(true);
-    } else {
-      setBoardForBlack(setBoardState);
+    currentPlayerColor === "w"
+    ? setBoardForWhite(setBoardState)
+    : setBoardForBlack(setBoardState);
+  }, []);
+  
+  //useEFfect for handling socket connections
+  useEffect(() => {
+    function onConnect() {
+      console.log("socket is connected");
+      setIsConnected(true);
     }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+  
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on("greeting",(message)=>{
+      console.log(message);
+    })
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
   }, []);
 
-  function updateBoard(fromX: number, fromY: number, toX: number, toY: number) {
+  function updateBoard(fromX:number,fromY:number,toX:number,toY:number){
     const updatedBoard: Piece[][] = [...boardState];
-    updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
-    updatedBoard[fromY][fromX] = "";
-    setBoardState(updatedBoard);
-  }
-
-  function sendBoardState()
-  {
-    const updatedBoardMsg = {
-      type: "update_board",
-      boardState,
-    };
-    if(connectionRef && connectionRef.current){
-      connectionRef.current.send(JSON.stringify(updatedBoardMsg));
-      setIsMyTurn(false);
-    }
+      updatedBoard[toY][toX] = updatedBoard[fromY][fromX];
+      updatedBoard[fromY][fromX] = "";
+      setBoardState(updatedBoard);
   }
 
   function onDropHandler(
@@ -128,35 +102,14 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
 
     const piece = pieceName.toString();
     console.log("from", fromX, fromY);
+    // console.log("piece:", piece);
     console.log("to", toX, toY);
 
-    // if move is valid update the board state & send it to other player
+    // if move is valid update the board state
     if (
-       isMyTurn &&
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
-      console.log("piece:",piece)
-
-      //handle pawn promotion if it happens
-      if((piece==='wP'||piece==="bP")&& toY ===0)
-      {
-        setPromotionStats({
-          set:true,
-          color:piece==='wP'?"white":"black",
-          xcord:toX,
-          ycord:toY
-        })
- 
-      }
-    
-        updateBoard(fromX, fromY, toX, toY);
-          
-      if (!connectionRef.current) {
-        console.log("Disconnected!!");
-        return;
-      }
-      // sending the updated board state to other player
-      sendBoardState();
+        updateBoard(fromX,fromY,toX,toY)
     }
   }
 
@@ -190,7 +143,6 @@ const Board = ({ myPeer, reciverID, isCaller, currentPlayerColor }: props) => {
   return (
     <>
       <div className="flex justify-center">
-        {promotionStats?.set &&<PromotionToast color={promotionStats.color} xcord={promotionStats.xcord} ycord={promotionStats.ycord} sendBoardState={sendBoardState}  />}
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>
