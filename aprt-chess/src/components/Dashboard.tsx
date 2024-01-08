@@ -20,12 +20,24 @@ const Dashboard = ({
 }: props) => {
   const [roomID,setRoomID] = useState<string>("");
   const [hasOpponentJoined,setHasOpponentJoined] = useState<boolean>(false);
+  const [playerEmail,setPlayerEmail] = useState<string>();
   
   const navigate = useNavigate();
 
   const currentPlayerColorRef = useRef(currentPlayerColor);
   const roomIDInput = useRef<HTMLInputElement>(null);
 
+  useEffect(()=>{
+      let email = localStorage.getItem("email")
+      if(email)
+      {
+        setPlayerEmail(email);
+        console.log("logged in with mail:",email)
+      }
+      else{
+        navigate('/login');
+      }
+  },[playerEmail])
 
   useEffect(() => {
     currentPlayerColorRef.current = currentPlayerColor;
@@ -67,7 +79,10 @@ const Dashboard = ({
   //   });
   // }
 
-  
+  function logoutHandler(){
+    localStorage.clear();
+    setPlayerEmail("");
+  }
 
   useEffect(() => {
     if (hasOpponentJoined) {
@@ -106,7 +121,8 @@ const Dashboard = ({
   return (
     <div className="container mx-auto p-4 text-center">
       <h1 className="text-3xl font-bold mb-4">Serverless Peer-to-Peer Chess</h1>
-
+      <h2 className=" absolute right-3 top-1 font-bold">{playerEmail}</h2>
+      <button className=" p-4 text-red-500 font-bold text-xl" onClick={logoutHandler}>Logout</button>
       <div className="mb-4">
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded mx-auto block"

@@ -1,12 +1,14 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { auth } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import "../assets/login-page.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -18,7 +20,10 @@ const Login = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("new user signed up", user.email);
-        localStorage.setItem("email", user.email);
+        if(user && user.email){
+          localStorage.setItem("email", user.email);
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -31,13 +36,18 @@ const Login = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("User logged in:", user.email);
-        localStorage.setItem("email", user.email);
-      })
+        if(user && user.email){
+          localStorage.setItem("email", user.email);
+          navigate("/");
+        }     
+       })
       .catch((err) => {
         console.log(err);
         setError('Invalid credentials')
       });
   };
+
+ 
 
   return (
     <div className="wrapper">
