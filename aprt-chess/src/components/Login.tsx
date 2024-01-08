@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent } from "react";
 import { auth } from "../firebase";
 import {
   UserCredential,
@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import "../assets/login-page.css";
 import { useNavigate } from "react-router-dom";
+import bcrypt from "bcryptjs";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,18 +16,29 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  async function hash(password: string) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      return await bcrypt.hash(password, salt);
+    } catch (e) {
+      console.error("error hashing passwords", e);
+      setError("error hashing password");
+      throw e;
+    }
+  }
+
   const signUpHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential:UserCredential) => {
+      .then(async (userCredential: UserCredential) => {
         const user = userCredential.user;
         console.log("new user signed up", user.email);
-        if(user && user.email){
-          localStorage.setItem("email", user.email);
+        if (user && user.email) {
+          sessionStorage.setItem("email", await hash(user.email));
           navigate("/");
         }
       })
-      .catch((err:any) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
@@ -34,27 +46,29 @@ const Login = () => {
   const loginHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential:UserCredential) => {
+      .then(async (userCredential: UserCredential) => {
         const user = userCredential.user;
         console.log("User logged in:", user.email);
-        if(user && user.email){
-          localStorage.setItem("email", user.email);
+        if (user && user.email) {
+          sessionStorage.setItem("email", await hash(user.email));
           navigate("/");
-        }     
-       })
-      .catch((err:any) => {
+        }
+      })
+      .catch((err: any) => {
         console.log(err);
-        setError('Invalid credentials')
+        setError("Invalid credentials");
       });
   };
-
- 
 
   return (
     <div className="wrapper">
       <div className="card-switch">
         <label className="switch">
-          <input type="checkbox" className="toggle" onClick={() => setError('')}/>
+          <input
+            type="checkbox"
+            className="toggle"
+            onClick={() => setError("")}
+          />
           <span className="slider"></span>
           <span className="card-side after:before:text-white"></span>
           <div className="flip-card__inner">
@@ -77,7 +91,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                {error ? error : ''}
+                {error ? error : ""}
                 <button className="flip-card__btn">Let's go!</button>
               </form>
             </div>

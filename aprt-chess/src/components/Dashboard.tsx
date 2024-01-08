@@ -19,7 +19,7 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
   const roomIDInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    let email = localStorage.getItem("email");
+    let email = sessionStorage.getItem("email");
     if (email) {
       setPlayerEmail(email);
       console.log("logged in with mail:", email);
@@ -33,7 +33,7 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
   }, [currentPlayerColor]);
 
   function logoutHandler() {
-    localStorage.clear();
+    sessionStorage.clear();
     setPlayerEmail("");
   }
 
