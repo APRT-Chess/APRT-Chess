@@ -92,7 +92,7 @@ const Dashboard = ({
 
   function createGame()
   {
-    socket.emit("create-game",{socketID:socket.id,playerEmail})
+    socket.emit("create-game",{playerEmail})
     socket.on('create-success',(roomID:string)=>{
       console.log("roomID:",roomID);
       setRoomID(roomID);
@@ -107,7 +107,7 @@ const Dashboard = ({
   {
     let inputRoomID = roomIDInput.current?.value;
     console.log("entered room id:",inputRoomID);;
-    socket.emit("join-game",{socketID:socket.id,playerEmail,inputRoomID})
+    socket.emit("join-game",{playerEmail,inputRoomID})
     socket.on("join-success",()=>{
       console.log("joined room successfully");
       setHasOpponentJoined(true);
