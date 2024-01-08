@@ -1,6 +1,7 @@
 import { useState, FormEvent, useEffect } from "react";
 import { auth } from "../firebase";
 import {
+  UserCredential,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -17,7 +18,7 @@ const Login = () => {
   const signUpHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then((userCredential:UserCredential) => {
         const user = userCredential.user;
         console.log("new user signed up", user.email);
         if(user && user.email){
@@ -25,7 +26,7 @@ const Login = () => {
           navigate("/");
         }
       })
-      .catch((err) => {
+      .catch((err:any) => {
         console.log(err);
       });
   };
@@ -33,7 +34,7 @@ const Login = () => {
   const loginHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then((userCredential:UserCredential) => {
         const user = userCredential.user;
         console.log("User logged in:", user.email);
         if(user && user.email){
@@ -41,7 +42,7 @@ const Login = () => {
           navigate("/");
         }     
        })
-      .catch((err) => {
+      .catch((err:any) => {
         console.log(err);
         setError('Invalid credentials')
       });
