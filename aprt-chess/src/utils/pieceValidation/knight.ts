@@ -1,4 +1,3 @@
-import { PieceColor } from "../validate";
 import { calcDist, calcSlope } from "../mathFunctions";
 
 export function validateKnightMove(
