@@ -13,7 +13,6 @@
   "dependencies": {
     "@types/firebase": "^3.2.1",
     "firebase": "^10.7.1",
-    "peerjs": "^1.5.2",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
