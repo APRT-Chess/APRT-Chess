@@ -1,4 +1,4 @@
-import { useEffect, DragEvent } from "react";
+import { useEffect, DragEvent, useState } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
@@ -14,6 +14,7 @@ interface props {
 
 const Board = ({ currentPlayerColor }: props) => {
   const { boardState, setBoardState, isConnected, setIsConnected } = useBoard();
+  const [isMyTurn, setIsMyTurn] = useState<boolean>(false)
 
   useEffect(() => {
     currentPlayerColor === "w"
@@ -74,6 +75,7 @@ const Board = ({ currentPlayerColor }: props) => {
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
       updateBoard(fromX, fromY, toX, toY);
+      socket.emit("update-board", boardState);
     }
   }
 

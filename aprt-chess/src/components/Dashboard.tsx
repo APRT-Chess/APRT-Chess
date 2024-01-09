@@ -15,7 +15,6 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
 
   const navigate = useNavigate();
 
-  const currentPlayerColorRef = useRef(currentPlayerColor);
   const roomIDInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -27,10 +26,6 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
       navigate("/login");
     }
   }, [playerEmail]);
-
-  useEffect(() => {
-    currentPlayerColorRef.current = currentPlayerColor;
-  }, [currentPlayerColor]);
 
   function logoutHandler() {
     sessionStorage.clear();
@@ -66,6 +61,11 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
     socket.on("join-success", () => {
       console.log("joined room successfully");
       setHasOpponentJoined(true);
+    });
+    socket.on("recieve-host-color", (hostColor: PieceColor) => {
+      hostColor === "w"
+        ? setCurrentPlayerColor("b")
+        : setCurrentPlayerColor("w");
     });
   }
   function copyToClipboard() {
