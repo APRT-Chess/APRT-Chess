@@ -72,6 +72,11 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
     navigator.clipboard.writeText(roomID);
   }
 
+  function emitPieceColor(color: PieceColor) {
+    setCurrentPlayerColor(color);
+    socket.emit("host-piece-color", color);
+  }
+
   return (
     <div className="container mx-auto p-4 text-center">
       <h1 className="text-3xl font-bold mb-4">Serverless Peer-to-Peer Chess</h1>
@@ -97,7 +102,7 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
               className={`${
                 currentPlayerColor === "w" ? "bg-blue-500" : "bg-gray-300"
               } text-white px-4 py-2 rounded mx-auto inline mr-2`}
-              onClick={() => setCurrentPlayerColor("w")}
+              onClick={() => emitPieceColor("w")}
             >
               White
             </button>
@@ -106,7 +111,7 @@ const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
               className={`${
                 currentPlayerColor === "b" ? "bg-black" : "bg-gray-300"
               } text-white px-4 py-2 rounded mx-auto inline`}
-              onClick={() => setCurrentPlayerColor("b")}
+              onClick={() => emitPieceColor("b")}
             >
               Black
             </button>
