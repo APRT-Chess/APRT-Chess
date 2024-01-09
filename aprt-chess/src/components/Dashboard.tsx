@@ -6,26 +6,37 @@ import { socket } from "../utils/socket/socket";
 interface props {
   currentPlayerColor: PieceColor;
   setCurrentPlayerColor: React.Dispatch<React.SetStateAction<PieceColor>>;
+  playerEmail: string;
+  setPlayerEmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Dashboard = ({ currentPlayerColor, setCurrentPlayerColor }: props) => {
+const Dashboard = ({
+  currentPlayerColor,
+  setCurrentPlayerColor,
+  playerEmail,
+  setPlayerEmail,
+}: props) => {
   const [roomID, setRoomID] = useState<string>("");
   const [hasOpponentJoined, setHasOpponentJoined] = useState<boolean>(false);
-  const [playerEmail, setPlayerEmail] = useState<string>();
 
   const navigate = useNavigate();
 
   const roomIDInput = useRef<HTMLInputElement>(null);
 
+  // useEffect(() => {
+  //   let email = sessionStorage.getItem("email");
+  //   if (email) {
+  //     setPlayerEmail(email);
+  //     console.log("logged in with mail:", email);
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, [playerEmail]);
   useEffect(() => {
-    let email = sessionStorage.getItem("email");
-    if (email) {
-      setPlayerEmail(email);
-      console.log("logged in with mail:", email);
-    } else {
+    if (!playerEmail) {
       navigate("/login");
     }
-  }, [playerEmail]);
+  });
 
   function logoutHandler() {
     sessionStorage.clear();

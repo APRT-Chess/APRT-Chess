@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Dispatch } from "react";
 import { auth } from "../firebase";
 import {
   UserCredential,
@@ -9,10 +9,14 @@ import "../assets/login-page.css";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 
-const Login = () => {
+interface props{
+  playerEmail: string;
+  setPlayerEmail: React.Dispatch<React.SetStateAction<string>>; 
+}
+
+const Login = ({playerEmail, setPlayerEmail}: props) => {
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
@@ -29,7 +33,7 @@ const Login = () => {
 
   const signUpHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, playerEmail, password)
       .then(async (userCredential: UserCredential) => {
         const user = userCredential.user;
         console.log("new user signed up", user.email);
@@ -45,7 +49,7 @@ const Login = () => {
 
   const loginHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, playerEmail, password)
       .then(async (userCredential: UserCredential) => {
         const user = userCredential.user;
         console.log("User logged in:", user.email);
@@ -80,8 +84,8 @@ const Login = () => {
                   name="email"
                   placeholder="Email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={playerEmail}
+                  onChange={(e) => setPlayerEmail(e.target.value)}
                 />
                 <input
                   className="flip-card__input"
@@ -110,8 +114,8 @@ const Login = () => {
                   name="email"
                   placeholder="Email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={playerEmail}
+                  onChange={(e) => setPlayerEmail(e.target.value)}
                 />
                 <input
                   className="flip-card__input"

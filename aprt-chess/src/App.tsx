@@ -9,6 +9,7 @@ import { BoardProvider } from "./contexts/BoardContext";
 
 function App() {
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("");
+  const [playerEmail, setPlayerEmail] = useState<string>("");
 
   return (
     <BoardProvider>
@@ -20,11 +21,21 @@ function App() {
               <Dashboard
                 currentPlayerColor={currentPlayerColor}
                 setCurrentPlayerColor={setCurrentPlayerColor}
+                playerEmail={playerEmail}
+                setPlayerEmail={setPlayerEmail}
               />
             }
           ></Route>
 
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                playerEmail={playerEmail}
+                setPlayerEmail={setPlayerEmail}
+              />
+            }
+          />
 
           <Route
             path="/board"
