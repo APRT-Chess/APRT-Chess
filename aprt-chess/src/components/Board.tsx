@@ -5,6 +5,7 @@ import { validate } from "../utils/validate";
 import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 import { useBoard } from "../contexts/BoardContext";
 import { socket } from "../utils/socket/socket";
+import { flipBoard } from "../utils/mathFunctions";
 
 type Piece = string;
 
@@ -14,12 +15,15 @@ interface props {
 
 const Board = ({ currentPlayerColor }: props) => {
   const { boardState, setBoardState, isConnected, setIsConnected } = useBoard();
-  const [isMyTurn, setIsMyTurn] = useState<boolean>(false)
+  const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
 
   useEffect(() => {
-    currentPlayerColor === "w"
-      ? setBoardForWhite(setBoardState)
-      : setBoardForBlack(setBoardState);
+    if (currentPlayerColor === "w") {
+      setBoardForWhite(setBoardState);
+      setIsMyTurn(true);
+    } else {
+      setBoardForBlack(setBoardState);
+    }
   }, []);
 
   // useEFfect for handling socket connections
@@ -35,6 +39,12 @@ const Board = ({ currentPlayerColor }: props) => {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+
+    socket.on("recieve-updated-board", (updatedBoard) => {
+      const flippedBoard = flipBoard(updatedBoard);
+      setBoardState(flippedBoard);
+      setIsMyTurn(true);
+    });
 
     return () => {
       socket.off("connect", onConnect);
@@ -72,10 +82,12 @@ const Board = ({ currentPlayerColor }: props) => {
 
     // if move is valid update the board state
     if (
+      isMyTurn &&
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
       updateBoard(fromX, fromY, toX, toY);
       socket.emit("update-board", boardState);
+      setIsMyTurn(false);
     }
   }
 
