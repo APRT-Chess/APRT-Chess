@@ -1,5 +1,6 @@
 import { Piece } from "../../types/global";
 import { blackRook, whiteRook } from "../ChessPieces";
+import { socket } from "../socket/socket";
 
 export function validateCastle(
   fromX: number,
@@ -21,6 +22,7 @@ export function validateCastle(
       existingBoardState[7][5] =
         boardState[7][7] == blackRook ? blackRook : whiteRook;
       existingBoardState[7][7] = "";
+    socket.emit("update-board",existingBoardState)
 
       return true;
     }
@@ -38,7 +40,7 @@ export function validateCastle(
       existingBoardState[7][3] =
         boardState[7][0] == blackRook ? blackRook : whiteRook;
       existingBoardState[7][0] = "";
-
+    socket.emit("update-board",existingBoardState)
       return true;
     }
   }
