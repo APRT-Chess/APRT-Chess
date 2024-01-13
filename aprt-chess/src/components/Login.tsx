@@ -38,7 +38,7 @@ const Login = ({playerEmail, setPlayerEmail}: props) => {
         const user = userCredential.user;
         console.log("new user signed up", user.email);
         if (user && user.email) {
-          sessionStorage.setItem("email", await hash(user.email));
+          localStorage.setItem("email", await hash(user.email));
           navigate("/");
         }
       })
@@ -54,7 +54,7 @@ const Login = ({playerEmail, setPlayerEmail}: props) => {
         const user = userCredential.user;
         console.log("User logged in:", user.email);
         if (user && user.email) {
-          sessionStorage.setItem("email", await hash(user.email));
+          localStorage.setItem("email", await hash(user.email));
           navigate("/");
         }
       })
