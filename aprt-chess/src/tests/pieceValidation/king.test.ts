@@ -19,18 +19,22 @@ const emptyBoard: string[][] = [
 ];
 
 test("king path validation upper right", async () => {
-  const isValid = validateKingMove(1, 1, 2, 2, emptyBoard);
+  const board = structuredClone(emptyBoard);
+  board[1][1] = whiteKing;
+  const isValid = validateKingMove(1, 1, 2, 2, board);
 
   expect(isValid).toBe(true);
 });
 
 test("king invalid path test", () => {
-  const isValid = validateKingMove(2, 1, 3, 4, emptyBoard);
+  const board = structuredClone(emptyBoard);
+  board[1][2] = blackKing;
+  const isValid = validateKingMove(2, 1, 3, 4, board);
 
   expect(isValid).toBe(false);
 });
 
-test("left casteling test", () => {
+test("left castling test", () => {
   const board = structuredClone(emptyBoard);
   board[7][4] = whiteKing;
   board[7][0] = whiteRook;
@@ -39,7 +43,7 @@ test("left casteling test", () => {
   expect(isValid).toBe(true);
 });
 
-test("right casteling test", () => {
+test("right castling test", () => {
   const board = structuredClone(emptyBoard);
   board[7][4] = blackKing;
   board[7][7] = blackRook;
@@ -88,7 +92,7 @@ test("Invalid right castling for black due to pieces in the way", () => {
   expect(isValid).toBe(false);
 });
 
-test("Invalid as king and rook are of opposite color", () => {
+test("Invalid castle as king and rook are of opposite color", () => {
   const board = structuredClone(emptyBoard);
   board[7][4] = blackKing;
   board[7][7] = whiteRook;
