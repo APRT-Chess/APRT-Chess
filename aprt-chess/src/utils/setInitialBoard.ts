@@ -33,14 +33,14 @@ export function setBoardForWhite(setBoardState: React.Dispatch<React.SetStateAct
 
 export function setBoardForBlack(setBoardState: React.Dispatch<React.SetStateAction<string[][]>>) {
   const pieces:Piece[][] = [
-      [whiteRook,whiteKnight,whiteBishop,whiteQueen,whiteKing,whiteBishop,whiteKnight,whiteRook],
+      [whiteRook,whiteKnight,whiteBishop,whiteKing,whiteQueen,whiteBishop,whiteKnight,whiteRook],
       [whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn,whitePawn],
       ["","","","","","","",""],
       ["","","","","","","",""],
       ["","","","","","","",""],
       ["","","","","","","",""],
       [blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn,blackPawn],
-      [blackRook,blackKnight,blackBishop,blackQueen,blackKing,blackBishop,blackKnight,blackRook],
+      [blackRook,blackKnight,blackBishop,blackKing,blackQueen,blackBishop,blackKnight,blackRook],
   ];
   setBoardState(pieces)
 }
