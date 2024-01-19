@@ -5,10 +5,10 @@ import { PromotionStats } from './Board';
 import ToastContent from './ToastContent';
  
 
-const PromotionToast = ({color,xcord,ycord,sendBoardState}:{color:string,xcord:number,ycord:number,sendBoardState:Function}) => {
+const PromotionToast = ({color,xcord,ycord}:{color:string,xcord:number,ycord:number}) => {
 
     const notify = () => {
-        toast(<ToastContent color={color} xcord={xcord} ycord={ycord} sendBoardState={sendBoardState} />, {
+        toast(<ToastContent color={color} xcord={xcord} ycord={ycord} />, {
             position: toast.POSITION.TOP_CENTER
         });
     }

@@ -1,12 +1,13 @@
 import { useBoard } from '../contexts/BoardContext';
 import { Piece } from '../types/global';
 import { blackBishop, blackKing, blackKnight, blackQueen, blackRook, whiteBishop, whiteKing, whiteKnight, whiteQueen, whiteRook } from '../utils/ChessPieces';
+import { socket } from '../utils/socket/socket';
 
 const whitePieces = [whiteBishop,whiteKnight,whiteRook,whiteQueen]
 const blackPieces = [blackBishop,blackKnight,blackRook,blackQueen]
 
 
-const ToastContent = (props:{color:string,xcord:number,ycord:number,sendBoardState:Function})=>{
+const ToastContent = (props:{color:string,xcord:number,ycord:number})=>{
 
     const { boardState, setBoardState } = useBoard();
 
@@ -15,8 +16,8 @@ const ToastContent = (props:{color:string,xcord:number,ycord:number,sendBoardSta
         const shallowCopy:Piece[][] = [...boardState]
         shallowCopy[ycord][xcord] = pieceRef;
         setBoardState(shallowCopy)
-        props.sendBoardState();
-        
+        //send socket event to update the board-state
+        socket.emit("update-board", boardState);
     }
     
     // show white piece toast if the pieces are white
