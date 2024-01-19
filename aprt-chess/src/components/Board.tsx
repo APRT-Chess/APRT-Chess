@@ -6,16 +6,25 @@ import { setBoardForWhite, setBoardForBlack } from "../utils/setInitialBoard";
 import { useBoard } from "../contexts/BoardContext";
 import { socket } from "../utils/socket/socket";
 import { flipBoard } from "../utils/mathFunctions";
+import PromotionToast from "./PromotionToast";
 
 type Piece = string;
 
 interface props {
   currentPlayerColor: PieceColor;
 }
+export interface PromotionStats{
+  set:boolean;
+  xcord:number;
+  ycord:number;
+  color:"black"|"white"
+}
 
 const Board = ({ currentPlayerColor }: props) => {
   const { boardState, setBoardState, isConnected, setIsConnected } = useBoard();
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
+  const [promotionStats,setPromotionStats] = useState<PromotionStats>();
+
 
   useEffect(() => {
     if (currentPlayerColor === "w") {
@@ -80,6 +89,18 @@ const Board = ({ currentPlayerColor }: props) => {
     // console.log("piece:", piece);
     console.log("to", toX, toY);
 
+    console.log("piece:",piece)
+
+      //handle pawn promotion if it happens
+      if((piece==='wP'||piece==="bP")&& toY ===0)
+      {
+        setPromotionStats({
+          set:true,
+          color:piece==='wP'?"white":"black",
+          xcord:toX,
+          ycord:toY
+        })
+      }
     // if move is valid update the board state
     if (
       isMyTurn &&
@@ -121,6 +142,7 @@ const Board = ({ currentPlayerColor }: props) => {
   return (
     <>
       <div className="flex justify-center">
+      {promotionStats?.set &&<PromotionToast color={promotionStats.color} xcord={promotionStats.xcord} ycord={promotionStats.ycord}/>}
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>
