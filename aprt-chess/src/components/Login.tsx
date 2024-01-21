@@ -8,13 +8,14 @@ import {
 import "../assets/login-page.css";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
+import { v1 as uuidv1 } from "uuid";
 
-interface props{
+interface props {
   playerEmail: string;
-  setPlayerEmail: React.Dispatch<React.SetStateAction<string>>; 
+  setPlayerEmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Login = ({playerEmail, setPlayerEmail}: props) => {
+const Login = ({ playerEmail, setPlayerEmail }: props) => {
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -39,6 +40,10 @@ const Login = ({playerEmail, setPlayerEmail}: props) => {
         console.log("new user signed up", user.email);
         if (user && user.email) {
           localStorage.setItem("email", await hash(user.email));
+          let uuid = localStorage.getItem("uuid");
+          if (uuid === null) {
+            localStorage.setItem("uuid", uuidv1());
+          }
           navigate("/");
         }
       })
@@ -55,6 +60,10 @@ const Login = ({playerEmail, setPlayerEmail}: props) => {
         console.log("User logged in:", user.email);
         if (user && user.email) {
           localStorage.setItem("email", await hash(user.email));
+          let uuid = localStorage.getItem("uuid");
+          if (uuid === null) {
+            localStorage.setItem("uuid", uuidv1());
+          }
           navigate("/");
         }
       })
