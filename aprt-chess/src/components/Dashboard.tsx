@@ -45,7 +45,8 @@ const Dashboard = ({
   }, [hasOpponentJoined]);
 
   function createGame() {
-    socket.emit("create-game", { playerEmail });
+    // roomID is same as host's uuid
+    socket.emit("create-game", { playerEmail, uuid });
 
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
