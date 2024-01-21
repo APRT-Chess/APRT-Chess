@@ -10,6 +10,7 @@ import { BoardProvider } from "./contexts/BoardContext";
 function App() {
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("");
   const [playerEmail, setPlayerEmail] = useState<string>("");
+  const [hostID, sethostID] = useState<string | undefined>("");
 
   return (
     <BoardProvider>
@@ -23,6 +24,7 @@ function App() {
                 setCurrentPlayerColor={setCurrentPlayerColor}
                 playerEmail={playerEmail}
                 setPlayerEmail={setPlayerEmail}
+                setHostID={sethostID}
               />
             }
           ></Route>
@@ -39,7 +41,9 @@ function App() {
 
           <Route
             path="/board"
-            element={<Board currentPlayerColor={currentPlayerColor} />}
+            element={
+              <Board currentPlayerColor={currentPlayerColor} hostID={hostID} />
+            }
           />
         </Routes>
       </BrowserRouter>

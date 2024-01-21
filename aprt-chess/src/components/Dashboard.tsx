@@ -8,6 +8,7 @@ interface props {
   setCurrentPlayerColor: React.Dispatch<React.SetStateAction<PieceColor>>;
   playerEmail: string;
   setPlayerEmail: React.Dispatch<React.SetStateAction<string>>;
+  setHostID: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 const Dashboard = ({
@@ -15,26 +16,22 @@ const Dashboard = ({
   setCurrentPlayerColor,
   playerEmail,
   setPlayerEmail,
+  setHostID,
 }: props) => {
   const [roomID, setRoomID] = useState<string>("");
   const [hasOpponentJoined, setHasOpponentJoined] = useState<boolean>(false);
+  const [uuid, setUuid] = useState<string | null>("");
 
   const navigate = useNavigate();
 
   const roomIDInput = useRef<HTMLInputElement>(null);
 
-  // useEffect(() => {
-  //   let email = sessionStorage.getItem("email");
-  //   if (email) {
-  //     setPlayerEmail(email);
-  //     console.log("logged in with mail:", email);
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, [playerEmail]);
   useEffect(() => {
-    if (!playerEmail) {
+    const uid = localStorage.getItem("uuid");
+    if (!playerEmail || uid === null) {
       navigate("/login");
+    } else {
+      setUuid(uid);
     }
   });
 
@@ -50,11 +47,13 @@ const Dashboard = ({
   }, [hasOpponentJoined]);
 
   function createGame() {
-    socket.emit("create-game", { playerEmail });
+    // roomID is same as host's uuid
+    socket.emit("create-game", { playerEmail, uuid });
 
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
       setRoomID(roomID);
+      setHostID(roomID);
     });
 
     socket.on("join-success", () => {
@@ -72,6 +71,7 @@ const Dashboard = ({
     socket.on("join-success", () => {
       console.log("joined room successfully");
       setHasOpponentJoined(true);
+      setHostID(inputRoomID);
     });
     socket.on("recieve-host-color", (hostColor: PieceColor) => {
       hostColor === "w"
@@ -83,15 +83,16 @@ const Dashboard = ({
     navigator.clipboard.writeText(roomID);
   }
 
-  function emitPieceColor(color: PieceColor) {
-    setCurrentPlayerColor(color);
-    socket.emit("host-piece-color", color);
+  function emitPieceColor(hostPieceColor: PieceColor) {
+    setCurrentPlayerColor(hostPieceColor);
+    socket.emit("host-piece-color", { hostPieceColor, uuid });
   }
 
   return (
     <div className="container mx-auto p-4 text-center">
       <h1 className="text-3xl font-bold mb-4">Serverless Peer-to-Peer Chess</h1>
       <h2 className=" absolute right-3 top-1 font-bold">{playerEmail}</h2>
+      <h2 className=" absolute right-3 top-9 font-bold">{uuid}</h2>
       <button
         className=" p-4 text-red-500 font-bold text-xl"
         onClick={logoutHandler}
