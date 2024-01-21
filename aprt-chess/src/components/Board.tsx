@@ -12,19 +12,20 @@ type Piece = string;
 
 interface props {
   currentPlayerColor: PieceColor;
+  hostID: string | undefined;
 }
-export interface PromotionStats{
-  set:boolean;
-  xcord:number;
-  ycord:number;
-  color:"black"|"white"
+export interface PromotionStats {
+  set: boolean;
+  xcord: number;
+  ycord: number;
+  color: "black" | "white";
 }
 
-const Board = ({ currentPlayerColor }: props) => {
+const Board = ({ currentPlayerColor, hostID }: props) => {
   const { boardState, setBoardState, isConnected, setIsConnected } = useBoard();
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
-  const [promotionStats,setPromotionStats] = useState<PromotionStats>();
-
+  const [promotionStats, setPromotionStats] = useState<PromotionStats>();
+  const [uuid, setUuid] = useState<string | null>("");
 
   useEffect(() => {
     if (currentPlayerColor === "w") {
@@ -33,6 +34,8 @@ const Board = ({ currentPlayerColor }: props) => {
     } else {
       setBoardForBlack(setBoardState);
     }
+
+    setUuid(localStorage.getItem("uuid"));
   }, []);
 
   // useEFfect for handling socket connections
@@ -89,25 +92,26 @@ const Board = ({ currentPlayerColor }: props) => {
     // console.log("piece:", piece);
     console.log("to", toX, toY);
 
-    console.log("piece:",piece)
+    console.log("piece:", piece);
 
-      //handle pawn promotion if it happens
-      if((piece==='wP'||piece==="bP")&& toY ===0)
-      {
-        setPromotionStats({
-          set:true,
-          color:piece==='wP'?"white":"black",
-          xcord:toX,
-          ycord:toY
-        })
-      }
+    //handle pawn promotion if it happens
+    if ((piece === "wP" || piece === "bP") && toY === 0) {
+      setPromotionStats({
+        set: true,
+        color: piece === "wP" ? "white" : "black",
+        xcord: toX,
+        ycord: toY,
+      });
+    }
     // if move is valid update the board state
     if (
       isMyTurn &&
       validate(fromX, fromY, toX, toY, piece, currentPlayerColor, boardState)
     ) {
       updateBoard(fromX, fromY, toX, toY);
-      socket.emit("update-board", boardState);
+      console.log("hostid", hostID);
+
+      socket.emit("update-board", { boardState, hostID });
       setIsMyTurn(false);
     }
   }
@@ -142,7 +146,13 @@ const Board = ({ currentPlayerColor }: props) => {
   return (
     <>
       <div className="flex justify-center">
-      {promotionStats?.set &&<PromotionToast color={promotionStats.color} xcord={promotionStats.xcord} ycord={promotionStats.ycord}/>}
+        {promotionStats?.set && (
+          <PromotionToast
+            color={promotionStats.color}
+            xcord={promotionStats.xcord}
+            ycord={promotionStats.ycord}
+          />
+        )}
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>

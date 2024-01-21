@@ -8,6 +8,7 @@ interface props {
   setCurrentPlayerColor: React.Dispatch<React.SetStateAction<PieceColor>>;
   playerEmail: string;
   setPlayerEmail: React.Dispatch<React.SetStateAction<string>>;
+  setHostID: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 const Dashboard = ({
@@ -15,6 +16,7 @@ const Dashboard = ({
   setCurrentPlayerColor,
   playerEmail,
   setPlayerEmail,
+  setHostID,
 }: props) => {
   const [roomID, setRoomID] = useState<string>("");
   const [hasOpponentJoined, setHasOpponentJoined] = useState<boolean>(false);
@@ -51,6 +53,7 @@ const Dashboard = ({
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
       setRoomID(roomID);
+      setHostID(roomID);
     });
 
     socket.on("join-success", () => {
@@ -68,6 +71,7 @@ const Dashboard = ({
     socket.on("join-success", () => {
       console.log("joined room successfully");
       setHasOpponentJoined(true);
+      setHostID(inputRoomID);
     });
     socket.on("recieve-host-color", (hostColor: PieceColor) => {
       hostColor === "w"
@@ -79,9 +83,9 @@ const Dashboard = ({
     navigator.clipboard.writeText(roomID);
   }
 
-  function emitPieceColor(color: PieceColor) {
-    setCurrentPlayerColor(color);
-    socket.emit("host-piece-color", color);
+  function emitPieceColor(hostPieceColor: PieceColor) {
+    setCurrentPlayerColor(hostPieceColor);
+    socket.emit("host-piece-color", { hostPieceColor, uuid });
   }
 
   return (
