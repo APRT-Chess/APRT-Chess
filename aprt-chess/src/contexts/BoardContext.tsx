@@ -8,7 +8,9 @@ interface BoardContextProps {
   isConnected:boolean;
   setIsConnected:React.Dispatch<React.SetStateAction<boolean>>
   roomID:string|undefined;
-  setRoomID:React.Dispatch<React.SetStateAction<string|undefined>>
+  setRoomID:React.Dispatch<React.SetStateAction<string>>
+  playerEmail:string;
+  setPlayerEmail:React.Dispatch<React.SetStateAction<string>>
 }
 
 const BoardContext = createContext<BoardContextProps | undefined>(undefined);
@@ -20,13 +22,15 @@ interface BoardProviderProps {
 export const BoardProvider: React.FC<BoardProviderProps> = ({ children }) => {
   const [boardState, setBoardState] = useState<Piece[][]>([]);
   const [isConnected,setIsConnected] = useState(socket.connected);
-  const [roomID,setRoomID] = useState<string|undefined>();
+  const [roomID,setRoomID] = useState<string>("");
+  const [playerEmail,setPlayerEmail] = useState<string>("");
 
   const contextValue: BoardContextProps = {
     boardState,
     setBoardState,
     isConnected,setIsConnected,
-    roomID,setRoomID
+    roomID,setRoomID,
+    playerEmail,setPlayerEmail
   };
 
   return (
