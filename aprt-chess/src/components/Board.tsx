@@ -26,6 +26,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
   const [uuid, setUuid] = useState<string | null>("");
+  const {roomID,setRoomID} = useBoard();
 
   useEffect(() => {
     if (currentPlayerColor === "w") {
@@ -111,7 +112,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
       updateBoard(fromX, fromY, toX, toY);
       console.log("hostid", hostID);
 
-      socket.emit("update-board", { boardState, hostID });
+      socket.emit("update-board", { boardState, roomID });
       setIsMyTurn(false);
     }
   }
