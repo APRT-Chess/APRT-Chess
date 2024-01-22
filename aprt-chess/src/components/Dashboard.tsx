@@ -57,6 +57,8 @@ const Dashboard = ({
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
       setRoomID(roomID);
+      //store this in local storage, so we can query it in redis on rejoin request
+      localStorage.setItem("current-game-room-id",roomID);
       setHostID(roomID);
     });
 
@@ -78,6 +80,9 @@ const Dashboard = ({
       setHostID(inputRoomID);
       if(inputRoomID){
         setRoomID(inputRoomID)
+
+        //store this in local storage, so we can query it in redis on rejoin request
+        localStorage.setItem("current-game-room-id",inputRoomID);
       }
     });
     socket.on("recieve-host-color", (hostColor: PieceColor) => {
