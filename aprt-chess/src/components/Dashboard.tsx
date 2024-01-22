@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { PieceColor } from "../types/global";
 import { socket } from "../utils/socket/socket";
+import { v1 as uuidv1 } from "uuid";
+import { useBoard } from "../contexts/BoardContext";
 
 interface props {
   currentPlayerColor: PieceColor;
@@ -18,7 +20,7 @@ const Dashboard = ({
   setPlayerEmail,
   setHostID,
 }: props) => {
-  const [roomID, setRoomID] = useState<string>("");
+  const {roomID, setRoomID} = useBoard();
   const [hasOpponentJoined, setHasOpponentJoined] = useState<boolean>(false);
   const [uuid, setUuid] = useState<string | null>("");
 
@@ -48,7 +50,9 @@ const Dashboard = ({
 
   function createGame() {
     // roomID is same as host's uuid
-    socket.emit("create-game", { playerEmail, uuid });
+    const newRoomID = uuidv1()
+    console.log("new room id:",newRoomID)
+    socket.emit("create-game", { playerEmail, newRoomID });
 
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
@@ -72,20 +76,24 @@ const Dashboard = ({
       console.log("joined room successfully");
       setHasOpponentJoined(true);
       setHostID(inputRoomID);
+      setRoomID(inputRoomID)
     });
     socket.on("recieve-host-color", (hostColor: PieceColor) => {
+      console.log("host color is:",hostColor)
       hostColor === "w"
         ? setCurrentPlayerColor("b")
         : setCurrentPlayerColor("w");
     });
   }
   function copyToClipboard() {
-    navigator.clipboard.writeText(roomID);
+    if(roomID){
+      navigator.clipboard.writeText(roomID);
+    }
   }
 
   function emitPieceColor(hostPieceColor: PieceColor) {
     setCurrentPlayerColor(hostPieceColor);
-    socket.emit("host-piece-color", { hostPieceColor, uuid });
+    socket.emit("host-piece-color", { hostPieceColor, roomID });
   }
 
   return (
