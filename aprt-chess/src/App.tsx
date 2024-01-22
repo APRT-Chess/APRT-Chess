@@ -5,15 +5,15 @@ import Dashboard from "./components/Dashboard";
 import Board from "./components/Board";
 import Login from "./components/Login";
 import { PieceColor } from "./types/global";
-import { BoardProvider } from "./contexts/BoardContext";
+import { BoardProvider, useBoard } from "./contexts/BoardContext";
 
 function App() {
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PieceColor>("");
-  const [playerEmail, setPlayerEmail] = useState<string>("");
+  const {playerEmail, setPlayerEmail} = useBoard();
   const [hostID, sethostID] = useState<string | undefined>("");
 
   return (
-    <BoardProvider>
+
       <BrowserRouter>
         <Routes>
           <Route
@@ -47,7 +47,6 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </BoardProvider>
   );
 }
 

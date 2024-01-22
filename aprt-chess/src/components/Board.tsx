@@ -27,6 +27,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
   const [uuid, setUuid] = useState<string | null>("");
   const {roomID,setRoomID} = useBoard();
+  const {playerEmail,setPlayerEmail} = useBoard();
 
   useEffect(() => {
     if (currentPlayerColor === "w") {

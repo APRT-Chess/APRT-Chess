@@ -76,7 +76,9 @@ const Dashboard = ({
       console.log("joined room successfully");
       setHasOpponentJoined(true);
       setHostID(inputRoomID);
-      setRoomID(inputRoomID)
+      if(inputRoomID){
+        setRoomID(inputRoomID)
+      }
     });
     socket.on("recieve-host-color", (hostColor: PieceColor) => {
       console.log("host color is:",hostColor)
