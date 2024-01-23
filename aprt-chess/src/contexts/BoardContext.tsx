@@ -11,6 +11,8 @@ interface BoardContextProps {
   setRoomID:React.Dispatch<React.SetStateAction<string>>
   playerEmail:string;
   setPlayerEmail:React.Dispatch<React.SetStateAction<string>>
+  firebaseID:string;
+  setFirebaseID:React.Dispatch<React.SetStateAction<string>>
 }
 
 const BoardContext = createContext<BoardContextProps | undefined>(undefined);
@@ -24,13 +26,15 @@ export const BoardProvider: React.FC<BoardProviderProps> = ({ children }) => {
   const [isConnected,setIsConnected] = useState(socket.connected);
   const [roomID,setRoomID] = useState<string>("");
   const [playerEmail,setPlayerEmail] = useState<string>("");
+  const [firebaseID, setFirebaseID] = useState<string>("");
+
 
   const contextValue: BoardContextProps = {
     boardState,
     setBoardState,
     isConnected,setIsConnected,
     roomID,setRoomID,
-    playerEmail,setPlayerEmail
+    playerEmail,setPlayerEmail,firebaseID,setFirebaseID
   };
 
   return (
