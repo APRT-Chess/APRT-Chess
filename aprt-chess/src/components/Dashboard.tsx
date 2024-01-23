@@ -101,6 +101,13 @@ const Dashboard = ({
     }
   }
 
+  function rejoinHandler(){
+    const prevRoomID = localStorage.getItem("current-game-room-id");
+    console.log("emitting rejoin request for last room having ID:",prevRoomID)
+    socket.emit("rejoin-request",{firebaseID,prevRoomID,playerEmail})
+    
+  }
+
   function emitPieceColor(hostPieceColor: PieceColor) {
     setCurrentPlayerColor(hostPieceColor);
     socket.emit("host-piece-color", { hostPieceColor, roomID });
@@ -110,6 +117,7 @@ const Dashboard = ({
     <div className="container mx-auto p-4 text-center">
       <h1 className="text-3xl font-bold mb-4">Serverless Peer-to-Peer Chess</h1>
       <h2 className=" absolute right-3 top-1 font-bold">{playerEmail}</h2>
+      <button className=" absolute right-3 top-7 bg-yellow-500 p-2 text-white" onClick={rejoinHandler}>Rejoin Prev Game</button>
       <button
         className=" p-4 text-red-500 font-bold text-xl"
         onClick={logoutHandler}
