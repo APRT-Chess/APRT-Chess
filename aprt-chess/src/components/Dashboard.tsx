@@ -20,20 +20,23 @@ const Dashboard = ({
   setPlayerEmail,
   setHostID,
 }: props) => {
-  const {roomID, setRoomID} = useBoard();
+  const { roomID, setRoomID,firebaseID,setFirebaseID } = useBoard();
   const [hasOpponentJoined, setHasOpponentJoined] = useState<boolean>(false);
-  const [uuid, setUuid] = useState<string | null>("");
 
   const navigate = useNavigate();
 
   const roomIDInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const uid = localStorage.getItem("uuid");
-    if (!playerEmail || uid === null) {
+    const fbID = localStorage.getItem("firebase_id");
+    const email = localStorage.getItem("email");
+    console.log("email fetched:", email, fbID);
+
+    if (!email || fbID === null) {
       navigate("/login");
     } else {
-      setUuid(uid);
+      if (email) setPlayerEmail(email);//to satisfy typescript
+      setFirebaseID(fbID);
     }
   });
 
@@ -50,15 +53,15 @@ const Dashboard = ({
 
   function createGame() {
     // roomID is same as host's uuid
-    const newRoomID = uuidv1()
-    console.log("new room id:",newRoomID)
-    socket.emit("create-game", { playerEmail, newRoomID });
+    const newRoomID = uuidv1();
+    console.log("new room id:", newRoomID);
+    socket.emit("create-game", { firebaseID,playerEmail, newRoomID });
 
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
       setRoomID(roomID);
       //store this in local storage, so we can query it in redis on rejoin request
-      localStorage.setItem("current-game-room-id",roomID);
+      localStorage.setItem("current-game-room-id", roomID);
       setHostID(roomID);
     });
 
@@ -72,28 +75,28 @@ const Dashboard = ({
     let inputRoomID = roomIDInput.current?.value;
     console.log("entered room id:", inputRoomID);
 
-    socket.emit("join-game", { playerEmail, inputRoomID });
+    socket.emit("join-game", { firebaseID,playerEmail, inputRoomID });
 
     socket.on("join-success", () => {
       console.log("joined room successfully");
       setHasOpponentJoined(true);
       setHostID(inputRoomID);
-      if(inputRoomID){
-        setRoomID(inputRoomID)
+      if (inputRoomID) {
+        setRoomID(inputRoomID);
 
         //store this in local storage, so we can query it in redis on rejoin request
-        localStorage.setItem("current-game-room-id",inputRoomID);
+        localStorage.setItem("current-game-room-id", inputRoomID);
       }
     });
     socket.on("recieve-host-color", (hostColor: PieceColor) => {
-      console.log("host color is:",hostColor)
+      console.log("host color is:", hostColor);
       hostColor === "w"
         ? setCurrentPlayerColor("b")
         : setCurrentPlayerColor("w");
     });
   }
   function copyToClipboard() {
-    if(roomID){
+    if (roomID) {
       navigator.clipboard.writeText(roomID);
     }
   }
@@ -107,7 +110,6 @@ const Dashboard = ({
     <div className="container mx-auto p-4 text-center">
       <h1 className="text-3xl font-bold mb-4">Serverless Peer-to-Peer Chess</h1>
       <h2 className=" absolute right-3 top-1 font-bold">{playerEmail}</h2>
-      <h2 className=" absolute right-3 top-9 font-bold">{uuid}</h2>
       <button
         className=" p-4 text-red-500 font-bold text-xl"
         onClick={logoutHandler}

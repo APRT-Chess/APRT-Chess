@@ -21,29 +21,15 @@ const Login = ({ playerEmail, setPlayerEmail }: props) => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  async function hash(password: string) {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      return await bcrypt.hash(password, salt);
-    } catch (e) {
-      console.error("error hashing passwords", e);
-      setError("error hashing password");
-      throw e;
-    }
-  }
-
   const signUpHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, playerEmail, password)
       .then(async (userCredential: UserCredential) => {
         const user = userCredential.user;
         console.log("new user signed up", user.email);
-        if (user && user.email) {
-          localStorage.setItem("email", await hash(user.email));
-          let uuid = localStorage.getItem("uuid");
-          if (uuid === null) {
-            localStorage.setItem("uuid", uuidv1());
-          }
+        if (user && user.uid && user.email) {
+          localStorage.setItem("firebase_id", user.uid);
+          localStorage.setItem("email", user.email);
           navigate("/");
         }
       })
@@ -58,12 +44,9 @@ const Login = ({ playerEmail, setPlayerEmail }: props) => {
       .then(async (userCredential: UserCredential) => {
         const user = userCredential.user;
         console.log("User logged in:", user.email);
-        if (user && user.email) {
-          localStorage.setItem("email", await hash(user.email));
-          let uuid = localStorage.getItem("uuid");
-          if (uuid === null) {
-            localStorage.setItem("uuid", uuidv1());
-          }
+        if (user && user.uid&&user.email) {
+          localStorage.setItem("firebase_id", user.uid);
+          localStorage.setItem("email", user.email);
           navigate("/");
         }
       })
