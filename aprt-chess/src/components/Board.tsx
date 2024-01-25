@@ -60,6 +60,18 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
       setIsMyTurn(true);
     });
 
+    socket.on("receive-rejoin-board",({currBoardState,isPlayersTurn,shouldFlip})=>{{
+        console.log(currBoardState);
+        let newBoardState = JSON.parse(currBoardState);
+        if(shouldFlip){
+          newBoardState = flipBoard(newBoardState)
+        }
+        setBoardState(newBoardState);
+        setIsMyTurn(isPlayersTurn);
+        
+    }})
+
+
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
