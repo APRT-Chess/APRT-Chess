@@ -54,7 +54,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
-    socket.on("recieve-updated-board", (updatedBoard) => {
+    socket.on("receive-updated-board", (updatedBoard) => {
       const flippedBoard = flipBoard(updatedBoard);
       setBoardState(flippedBoard);
       setIsMyTurn(true);

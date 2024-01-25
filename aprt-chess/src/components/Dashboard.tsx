@@ -88,7 +88,7 @@ const Dashboard = ({
         localStorage.setItem("current-game-room-id", inputRoomID);
       }
     });
-    socket.on("recieve-host-color", (hostColor: PieceColor) => {
+    socket.on("receive-host-color", (hostColor: PieceColor) => {
       console.log("host color is:", hostColor);
       hostColor === "w"
         ? setCurrentPlayerColor("b")
