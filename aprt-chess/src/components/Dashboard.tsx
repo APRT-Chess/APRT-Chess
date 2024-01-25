@@ -105,6 +105,13 @@ const Dashboard = ({
     const prevRoomID = localStorage.getItem("current-game-room-id");
     console.log("emitting rejoin request for last room having ID:",prevRoomID)
     socket.emit("rejoin-request",{firebaseID,prevRoomID,playerEmail})
+
+    socket.on("rejoin-success",(currPlayerColor:PieceColor)=>{
+      console.log("rejoin successful")
+      console.log("current player's color:",currPlayerColor)
+      setCurrentPlayerColor(currPlayerColor)
+      setHasOpponentJoined(true)
+    })
     
   }
 
