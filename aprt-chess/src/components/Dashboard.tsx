@@ -20,7 +20,7 @@ const Dashboard = ({
   setPlayerEmail,
   setHostID,
 }: props) => {
-  const { roomID, setRoomID,firebaseID,setFirebaseID } = useBoard();
+  const { roomID, setRoomID, firebaseID, setFirebaseID } = useBoard();
   const [hasOpponentJoined, setHasOpponentJoined] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const Dashboard = ({
     if (!email || fbID === null) {
       navigate("/login");
     } else {
-      if (email) setPlayerEmail(email);//to satisfy typescript
+      if (email) setPlayerEmail(email); //to satisfy typescript
       setFirebaseID(fbID);
     }
   });
@@ -55,7 +55,7 @@ const Dashboard = ({
     // roomID is same as host's uuid
     const newRoomID = uuidv1();
     console.log("new room id:", newRoomID);
-    socket.emit("create-game", { firebaseID,playerEmail, newRoomID });
+    socket.emit("create-game", { firebaseID, playerEmail, newRoomID });
 
     socket.on("create-success", (roomID: string) => {
       console.log("roomID:", roomID);
@@ -75,7 +75,7 @@ const Dashboard = ({
     let inputRoomID = roomIDInput.current?.value;
     console.log("entered room id:", inputRoomID);
 
-    socket.emit("join-game", { firebaseID,playerEmail, inputRoomID });
+    socket.emit("join-game", { firebaseID, playerEmail, inputRoomID });
 
     socket.on("join-success", () => {
       console.log("joined room successfully");
@@ -101,18 +101,17 @@ const Dashboard = ({
     }
   }
 
-  function rejoinHandler(){
+  function rejoinHandler() {
     const prevRoomID = localStorage.getItem("current-game-room-id");
-    console.log("emitting rejoin request for last room having ID:",prevRoomID)
-    socket.emit("rejoin-request",{firebaseID,prevRoomID,playerEmail})
+    console.log("emitting rejoin request for last room having ID:", prevRoomID);
+    socket.emit("rejoin-request", { firebaseID, prevRoomID, playerEmail });
 
-    socket.on("rejoin-success",(currPlayerColor:PieceColor)=>{
-      console.log("rejoin successful")
-      console.log("current player's color:",currPlayerColor)
-      setCurrentPlayerColor(currPlayerColor)
-      setHasOpponentJoined(true)
-    })
-    
+    socket.on("rejoin-success", (currPlayerColor: PieceColor) => {
+      console.log("rejoin successful");
+      console.log("current player's color:", currPlayerColor);
+      setCurrentPlayerColor(currPlayerColor);
+      setHasOpponentJoined(true);
+    });
   }
 
   function emitPieceColor(hostPieceColor: PieceColor) {
@@ -122,9 +121,14 @@ const Dashboard = ({
 
   return (
     <div className="container mx-auto p-4 text-center">
-      <h1 className="text-3xl font-bold mb-4">Serverless Peer-to-Peer Chess</h1>
+      <h1 className="text-3xl font-bold mb-4">Websockets Chess</h1>
       <h2 className=" absolute right-3 top-1 font-bold">{playerEmail}</h2>
-      <button className=" absolute right-3 top-7 bg-yellow-500 p-2 text-white" onClick={rejoinHandler}>Rejoin Prev Game</button>
+      <button
+        className=" absolute right-3 top-7 bg-yellow-500 p-2 text-white"
+        onClick={rejoinHandler}
+      >
+        Rejoin Prev Game
+      </button>
       <button
         className=" p-4 text-red-500 font-bold text-xl"
         onClick={logoutHandler}
