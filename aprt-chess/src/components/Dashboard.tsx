@@ -103,15 +103,20 @@ const Dashboard = ({
 
   function rejoinHandler() {
     const prevRoomID = localStorage.getItem("current-game-room-id");
-    console.log("emitting rejoin request for last room having ID:", prevRoomID);
-    socket.emit("rejoin-request", { firebaseID, prevRoomID, playerEmail });
 
-    socket.on("rejoin-success", (currPlayerColor: PieceColor) => {
-      console.log("rejoin successful");
-      console.log("current player's color:", currPlayerColor);
-      setCurrentPlayerColor(currPlayerColor);
-      setHasOpponentJoined(true);
-    });
+    console.log("prevRoomID from localstorage:",prevRoomID);
+    console.log("emitting rejoin request for last room having ID:",prevRoomID)
+    socket.emit("rejoin-request",{firebaseID,prevRoomID,playerEmail})
+
+    socket.on("rejoin-success",(currPlayerColor:PieceColor)=>{
+      if(prevRoomID)setRoomID(prevRoomID);
+      console.log("rejoin successful")
+      console.log("current player's color:",currPlayerColor)
+      setCurrentPlayerColor(currPlayerColor)
+      setHasOpponentJoined(true)
+    })
+    
+
   }
 
   function emitPieceColor(hostPieceColor: PieceColor) {
