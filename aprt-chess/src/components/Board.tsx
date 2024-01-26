@@ -26,8 +26,8 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
   const [uuid, setUuid] = useState<string | null>("");
-  const {roomID,setRoomID} = useBoard();
-  const {playerEmail,setPlayerEmail} = useBoard();
+  const { roomID, setRoomID } = useBoard();
+  const { playerEmail, setPlayerEmail } = useBoard();
 
   useEffect(() => {
     if (currentPlayerColor === "w") {
@@ -54,23 +54,28 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
-    socket.on("recieve-updated-board", (updatedBoard) => {
+    socket.on("receive-updated-board", (updatedBoard) => {
       const flippedBoard = flipBoard(updatedBoard);
       setBoardState(flippedBoard);
       setIsMyTurn(true);
     });
 
-    socket.on("receive-rejoin-board",({currBoardState,isPlayersTurn,shouldFlip})=>{{
-        console.log(currBoardState);
-        let newBoardState = JSON.parse(currBoardState);
-        if(shouldFlip){
-          newBoardState = flipBoard(newBoardState)
+    socket.on(
+      "receive-rejoin-board",
+      ({ currBoardState, isPlayersTurn }) => {
+        {
+          console.log(currBoardState);
+          let newBoardState = JSON.parse(currBoardState);
+          // now if playersTurn is true,means that boardState is according to
+          // his orientation, else we have to rotate
+          if (isPlayersTurn) {
+            newBoardState = flipBoard(newBoardState);
+          }
+          setBoardState(newBoardState);
+          setIsMyTurn(isPlayersTurn);
         }
-        setBoardState(newBoardState);
-        setIsMyTurn(isPlayersTurn);
-        
-    }})
-
+      }
+    );
 
     return () => {
       socket.off("connect", onConnect);
