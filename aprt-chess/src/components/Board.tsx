@@ -25,7 +25,6 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const { boardState, setBoardState, isConnected, setIsConnected } = useBoard();
   const [isMyTurn, setIsMyTurn] = useState<boolean>(false);
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
-  const [uuid, setUuid] = useState<string | null>("");
   const { roomID, setRoomID } = useBoard();
   const { playerEmail, setPlayerEmail } = useBoard();
 
@@ -36,8 +35,6 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     } else {
       setBoardForBlack(setBoardState);
     }
-
-    setUuid(localStorage.getItem("uuid"));
   }, []);
 
   // useEFfect for handling socket connections
@@ -60,22 +57,19 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
       setIsMyTurn(true);
     });
 
-    socket.on(
-      "receive-rejoin-board",
-      ({ currBoardState, isPlayersTurn }) => {
-        {
-          console.log(currBoardState);
-          let newBoardState = JSON.parse(currBoardState);
-          // now if playersTurn is true,means that boardState is according to
-          // his orientation, else we have to rotate
-          if (isPlayersTurn) {
-            newBoardState = flipBoard(newBoardState);
-          }
-          setBoardState(newBoardState);
-          setIsMyTurn(isPlayersTurn);
+    socket.on("receive-rejoin-board", ({ currBoardState, isPlayersTurn }) => {
+      {
+        console.log(currBoardState);
+        let newBoardState = JSON.parse(currBoardState);
+        // now if playersTurn is true,means that boardState is according to
+        // his orientation, else we have to rotate
+        if (isPlayersTurn) {
+          newBoardState = flipBoard(newBoardState);
         }
+        setBoardState(newBoardState);
+        setIsMyTurn(isPlayersTurn);
       }
-    );
+    });
 
     return () => {
       socket.off("connect", onConnect);
@@ -108,7 +102,6 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
 
     const piece = pieceName.toString();
     console.log("from", fromX, fromY);
-    // console.log("piece:", piece);
     console.log("to", toX, toY);
 
     console.log("piece:", piece);
@@ -164,7 +157,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
 
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center flex-col">
         {promotionStats?.set && (
           <PromotionToast
             color={promotionStats.color}
@@ -175,6 +168,8 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
         <div className="grid grid-cols-8 grid-rows-8 gap-0 max-w-4xl">
           {boardJSX}
         </div>
+        <p>isMyTurn: {isMyTurn ? "True" : "False"}</p>
+        <p>current room id: {roomID}</p>
       </div>
     </>
   );
