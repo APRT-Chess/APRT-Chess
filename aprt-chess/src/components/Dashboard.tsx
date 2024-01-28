@@ -88,6 +88,7 @@ const Dashboard = ({
         localStorage.setItem("current-game-room-id", inputRoomID);
       }
     });
+
     socket.on("receive-host-color", (hostColor: PieceColor) => {
       console.log("host color is:", hostColor);
       hostColor === "w"
@@ -95,6 +96,7 @@ const Dashboard = ({
         : setCurrentPlayerColor("w");
     });
   }
+
   function copyToClipboard() {
     if (roomID) {
       navigator.clipboard.writeText(roomID);

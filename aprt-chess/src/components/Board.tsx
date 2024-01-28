@@ -27,6 +27,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
   const { roomID, setRoomID } = useBoard();
   const { playerEmail, setPlayerEmail } = useBoard();
+  const [selectedPiece, setSelectedPiece] = useState<string>("");
 
   useEffect(() => {
     if (currentPlayerColor === "w") {
@@ -37,7 +38,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     }
   }, []);
 
-  // useEFfect for handling socket connections
+  // useEffect for handling socket connections
   useEffect(() => {
     function onConnect() {
       console.log("socket is connected");
@@ -128,6 +129,10 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     }
   }
 
+  function onPieceClick(x: number, y: number) {
+    alert("clickedd");
+  }
+
   const boardJSX = [];
 
   let image = undefined;
@@ -148,7 +153,12 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
           onDragOver={(e) => e.preventDefault()}
         >
           {image && (
-            <Piece image={image} x_coordinate={col} y_coordinate={row}></Piece>
+            <Piece
+              image={image}
+              x_coordinate={col}
+              y_coordinate={row}
+              onPieceClick={onPieceClick}
+            />
           )}
         </div>
       );

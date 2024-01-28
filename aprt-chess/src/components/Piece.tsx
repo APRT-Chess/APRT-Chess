@@ -4,10 +4,10 @@ interface props {
   image: string;
   x_coordinate: number;
   y_coordinate: number;
+  onPieceClick(x: number, y:number): void;
 }
 
-function Piece({ image, x_coordinate, y_coordinate }: props) {
-  
+function Piece({ image, x_coordinate, y_coordinate, onPieceClick }: props) {
   function handleDrag(e: DragEvent<HTMLImageElement>) {
     // extracting the piece name(eg wK) from image url
     const pathString = image.split("/");
@@ -21,6 +21,8 @@ function Piece({ image, x_coordinate, y_coordinate }: props) {
     );
   }
 
+
+
   return (
     <img
       src={image}
@@ -28,6 +30,7 @@ function Piece({ image, x_coordinate, y_coordinate }: props) {
       className={`x-${x_coordinate} y-${y_coordinate} w-24 h-24 absolute`}
       draggable
       onDragStart={(e) => handleDrag(e)}
+      onClick={() => onPieceClick(x_coordinate, y_coordinate)}
     />
   );
 }
