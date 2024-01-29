@@ -29,6 +29,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const { playerEmail, setPlayerEmail } = useBoard();
   const [selectedPiece, setSelectedPiece] = useState<string>("");
 
+  // setup initial boardState depending on color
   useEffect(() => {
     if (currentPlayerColor === "w") {
       setBoardForWhite(setBoardState);
@@ -130,7 +131,8 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   }
 
   function onPieceClick(x: number, y: number) {
-    alert("clickedd");
+    setSelectedPiece(boardState[y][x]);
+    alert("click");
   }
 
   const boardJSX = [];
@@ -148,17 +150,14 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
           key={`${col}-${row}`}
           className={`inline-flex w-28 h-28 items-center justify-center select-none 
               x-coordinate-${col} y-coordinate-${row}  
-              ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}`}
+              ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}
+              ${image === selectedPiece ? "border-4 border-blue-500" : ""}`}
           onDrop={(e) => onDropHandler(e, col, row)}
           onDragOver={(e) => e.preventDefault()}
+          onClick={() => onPieceClick(col, row)}
         >
           {image && (
-            <Piece
-              image={image}
-              x_coordinate={col}
-              y_coordinate={row}
-              onPieceClick={onPieceClick}
-            />
+            <Piece image={image} x_coordinate={col} y_coordinate={row} />
           )}
         </div>
       );
