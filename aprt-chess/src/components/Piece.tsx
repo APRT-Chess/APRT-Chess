@@ -7,7 +7,6 @@ interface props {
 }
 
 function Piece({ image, x_coordinate, y_coordinate }: props) {
-  
   function handleDrag(e: DragEvent<HTMLImageElement>) {
     // extracting the piece name(eg wK) from image url
     const pathString = image.split("/");

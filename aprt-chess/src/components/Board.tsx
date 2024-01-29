@@ -1,4 +1,4 @@
-import { useEffect, DragEvent, useState } from "react";
+import React, { useEffect, DragEvent, useState, MouseEvent } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
@@ -27,7 +27,9 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
   const { roomID, setRoomID } = useBoard();
   const { playerEmail, setPlayerEmail } = useBoard();
+  const [selectedPiece, setSelectedPiece] = useState<string>("");
 
+  // setup initial boardState depending on color
   useEffect(() => {
     if (currentPlayerColor === "w") {
       setBoardForWhite(setBoardState);
@@ -37,7 +39,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     }
   }, []);
 
-  // useEFfect for handling socket connections
+  // useEffect for handling socket connections
   useEffect(() => {
     function onConnect() {
       console.log("socket is connected");
@@ -128,6 +130,15 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     }
   }
 
+  function onPieceClick(
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    x: number,
+    y: number
+  ): void {
+    e.stopPropagation();
+    setSelectedPiece(`${x}${y}`);
+  }
+
   const boardJSX = [];
 
   let image = undefined;
@@ -143,12 +154,18 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
           key={`${col}-${row}`}
           className={`inline-flex w-28 h-28 items-center justify-center select-none 
               x-coordinate-${col} y-coordinate-${row}  
-              ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}`}
+              ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}
+              ${
+                selectedPiece === `${col}${row}`
+                  ? "border-4 border-blue-500"
+                  : ""
+              }`}
           onDrop={(e) => onDropHandler(e, col, row)}
           onDragOver={(e) => e.preventDefault()}
+          onClick={(e) => onPieceClick(e, col, row)}
         >
           {image && (
-            <Piece image={image} x_coordinate={col} y_coordinate={row}></Piece>
+            <Piece image={image} x_coordinate={col} y_coordinate={row} />
           )}
         </div>
       );
@@ -157,7 +174,12 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
 
   return (
     <>
-      <div className="flex justify-center flex-col">
+      <div
+        className="flex justify-center flex-col"
+        onClick={() => {
+          setSelectedPiece("");
+        }}
+      >
         {promotionStats?.set && (
           <PromotionToast
             color={promotionStats.color}
