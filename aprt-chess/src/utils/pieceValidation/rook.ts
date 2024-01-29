@@ -1,4 +1,3 @@
-import { PieceColor } from "../validate";
 import { horizontalPathCheck } from "../pathChecks/horizontalCheck";
 import { verticalPathCheck } from "../pathChecks/verticalCheck";
 
