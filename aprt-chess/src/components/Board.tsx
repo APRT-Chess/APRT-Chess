@@ -1,4 +1,4 @@
-import { useEffect, DragEvent, useState } from "react";
+import React, { useEffect, DragEvent, useState, MouseEvent } from "react";
 import Piece from "./Piece";
 import { PieceColor } from "../types/global";
 import { validate } from "../utils/validate";
@@ -130,9 +130,13 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
     }
   }
 
-  function onPieceClick(x: number, y: number) {
-    setSelectedPiece(boardState[y][x]);
-    alert("click");
+  function onPieceClick(
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    x: number,
+    y: number
+  ): void {
+    e.stopPropagation();
+    setSelectedPiece(`${x}${y}`);
   }
 
   const boardJSX = [];
@@ -151,10 +155,14 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
           className={`inline-flex w-28 h-28 items-center justify-center select-none 
               x-coordinate-${col} y-coordinate-${row}  
               ${color % 2 === 0 ? "bg-slate-700" : "bg-gray-400"}
-              ${image === selectedPiece ? "border-4 border-blue-500" : ""}`}
+              ${
+                selectedPiece === `${col}${row}`
+                  ? "border-4 border-blue-500"
+                  : ""
+              }`}
           onDrop={(e) => onDropHandler(e, col, row)}
           onDragOver={(e) => e.preventDefault()}
-          onClick={() => onPieceClick(col, row)}
+          onClick={(e) => onPieceClick(e, col, row)}
         >
           {image && (
             <Piece image={image} x_coordinate={col} y_coordinate={row} />
@@ -166,7 +174,12 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
 
   return (
     <>
-      <div className="flex justify-center flex-col">
+      <div
+        className="flex justify-center flex-col"
+        onClick={() => {
+          setSelectedPiece("");
+        }}
+      >
         {promotionStats?.set && (
           <PromotionToast
             color={promotionStats.color}
