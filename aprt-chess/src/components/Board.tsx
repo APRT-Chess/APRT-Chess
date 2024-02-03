@@ -7,6 +7,7 @@ import { useBoard } from "../contexts/BoardContext";
 import { socket } from "../utils/socket/socket";
 import { flipBoard } from "../utils/mathFunctions";
 import PromotionToast from "./PromotionToast";
+import { getPieceName } from "../utils/pieceUtils";
 
 type Piece = string;
 
@@ -27,7 +28,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
   const [promotionStats, setPromotionStats] = useState<PromotionStats>();
   const { roomID, setRoomID } = useBoard();
   const { playerEmail, setPlayerEmail } = useBoard();
-  const [selectedPiece, setSelectedPiece] = useState<string>("");
+  const [selectedPiece, setSelectedPiece] = useState<string>(""); // format: "xy"
 
   // setup initial boardState depending on color
   useEffect(() => {
@@ -164,8 +165,20 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
           onDragOver={(e) => e.preventDefault()}
           onClick={(e) => onPieceClick(e, col, row)}
         >
-          {image && (
+          {image ? (
             <Piece image={image} x_coordinate={col} y_coordinate={row} />
+          ) : selectedPiece && validate(
+              +selectedPiece[0],
+              +selectedPiece[1],
+              col,
+              row,
+              getPieceName(+selectedPiece[0], +selectedPiece[1], boardState),
+              currentPlayerColor,
+              boardState
+            ) ? (
+            <span>lessgo</span>
+          ) : (
+            <span></span>
           )}
         </div>
       );
