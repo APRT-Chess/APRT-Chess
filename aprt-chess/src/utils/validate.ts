@@ -15,7 +15,6 @@ function isOccupied(x: number, y: number, boardState: string[][]): boolean {
 
 // the switch case which trigges the correct validation logic
 
-
 export function validate(
   fromX: number,
   fromY: number,
@@ -25,14 +24,20 @@ export function validate(
   currentPlayerColor: PieceColor,
   boardState: Piece[][]
 ): boolean {
-  console.log("is occupied:", isOccupied(toX, toY, boardState));
+  // following block is added to handle the case
+  // when validate() is called in the possible moves feature
+  // it might get called for a vacant tile with no piece
+  // hence pieceName === ""
+  if (!pieceName) {
+    return false;
+  }
 
   if (currentPlayerColor === "w") {
     switch (pieceName) {
       case "wP":
         return validatePawnMove(fromX, fromY, toX, toY, boardState);
       case "wK":
-        return validateKingMove(fromX, fromY, toX, toY,boardState);
+        return validateKingMove(fromX, fromY, toX, toY, boardState);
       case "wQ":
         return validateQueenMove(fromX, fromY, toX, toY, boardState);
       case "wN":
@@ -50,7 +55,7 @@ export function validate(
       case "bP":
         return validatePawnMove(fromX, fromY, toX, toY, boardState);
       case "bK":
-        return validateKingMove(fromX, fromY, toX, toY,boardState);
+        return validateKingMove(fromX, fromY, toX, toY, boardState);
       case "bQ":
         return validateQueenMove(fromX, fromY, toX, toY, boardState);
       case "bN":
