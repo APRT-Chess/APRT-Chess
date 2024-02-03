@@ -176,7 +176,7 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
               currentPlayerColor,
               boardState
             ) ? (
-            <span>lessgo</span>
+            <span className="w-5 h-5 rounded-full bg-indigo-500"></span>
           ) : (
             <span></span>
           )}
