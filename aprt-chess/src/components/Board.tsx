@@ -142,6 +142,9 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
 
   const boardJSX = [];
 
+  // logging time taken to render the board
+  const startLog = Date.now();
+
   let image = undefined;
   // pushes the JSX for chessboard to board array
   for (let row = 0; row < boardState.length; row++) {
@@ -150,6 +153,20 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
       // else it is light
       const color = col + row;
       image = boardState[row][col];
+
+      let isValidTile = false;
+      if (selectedPiece) {
+        isValidTile = validate(
+          +selectedPiece[0],
+          +selectedPiece[1],
+          col,
+          row,
+          getPieceName(+selectedPiece[0], +selectedPiece[1], boardState),
+          currentPlayerColor,
+          boardState
+        );
+      }
+
       boardJSX.push(
         <div
           key={`${col}-${row}`}
@@ -167,23 +184,17 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
         >
           {image ? (
             <Piece image={image} x_coordinate={col} y_coordinate={row} />
-          ) : selectedPiece && validate(
-              +selectedPiece[0],
-              +selectedPiece[1],
-              col,
-              row,
-              getPieceName(+selectedPiece[0], +selectedPiece[1], boardState),
-              currentPlayerColor,
-              boardState
-            ) ? (
-            <span className="w-5 h-5 rounded-full bg-indigo-500"></span>
           ) : (
-            <span></span>
+            isValidTile && (
+              <span className="w-5 h-5 rounded-full bg-indigo-500"></span>
+            )
           )}
         </div>
       );
     }
   }
+
+  console.log("rendered in: ", Date.now() - startLog, "ms");
 
   return (
     <>
