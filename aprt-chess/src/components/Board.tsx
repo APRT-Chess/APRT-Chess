@@ -183,7 +183,12 @@ const Board = ({ currentPlayerColor, hostID }: props) => {
           onClick={(e) => onPieceClick(e, col, row)}
         >
           {image ? (
-            <Piece image={image} x_coordinate={col} y_coordinate={row} />
+            <Piece
+              image={image}
+              x_coordinate={col}
+              y_coordinate={row}
+              inDanger={isValidTile}
+            />
           ) : (
             isValidTile && (
               <span className="w-5 h-5 rounded-full bg-indigo-500"></span>
