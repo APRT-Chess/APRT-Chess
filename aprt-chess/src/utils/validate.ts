@@ -41,7 +41,7 @@ export function validate(
       case "wQ":
         return validateQueenMove(fromX, fromY, toX, toY, boardState);
       case "wN":
-        return validateKnightMove(fromX, fromY, toX, toY);
+        return validateKnightMove(fromX, fromY, toX, toY, boardState);
       case "wR":
         return validateRookMove(fromX, fromY, toX, toY, boardState);
       case "wB":
@@ -59,7 +59,7 @@ export function validate(
       case "bQ":
         return validateQueenMove(fromX, fromY, toX, toY, boardState);
       case "bN":
-        return validateKnightMove(fromX, fromY, toX, toY);
+        return validateKnightMove(fromX, fromY, toX, toY, boardState);
       case "bR":
         return validateRookMove(fromX, fromY, toX, toY, boardState);
       case "bB":

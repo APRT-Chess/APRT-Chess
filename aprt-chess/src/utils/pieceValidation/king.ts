@@ -1,6 +1,7 @@
 import { Piece } from "../../types/global";
 import { calcDist } from "../mathFunctions";
 import { validateCastle } from "../pathChecks/castleValidation";
+import { validateCapture } from "../pathChecks/validateCaptureForOppositeColor";
 
 // king move is valid iff Math.floor(dist(to, from)) === 1
 // kill move not yet implemented
@@ -18,7 +19,7 @@ export function validateKingMove(
   if (isValidCastle) return true;
 
   const distance = Math.floor(calcDist(fromX, fromY, toX, toY));
-  console.log(distance);
-  if (distance === 1) return true;
+  if (distance === 1)
+    return validateCapture(fromX, fromY, toX, toY, boardState);
   else return false;
 }
