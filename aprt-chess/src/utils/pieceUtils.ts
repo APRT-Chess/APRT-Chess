@@ -2,7 +2,7 @@ import { Piece } from "../types/global";
 
 // piece names are stored as urls in boardState
 // eg: /public/pieces/wQ.svg for white queen
-// after build url: https://aprt-chess-frontend.onrender.com/assets/wQ-2ff237fc.svg
+// after build url: /assets/wQ-2ff237fc.svg
 
 // adjusting the utility functions to work after build
 
@@ -15,7 +15,7 @@ export function getPieceColor(x: number, y: number, boardState: Piece[][]) {
   //   .split("/")[3] // wQ.svg
   //   .split(".")[0][0]; // w
   const color: string = boardState[y][x]
-  .split("/")[4]  // wQ-asdf.svg
+  .split("/")[2]  // wQ-asdf.svg
   .split("-")[0][0]; // w
   return color;
 }
@@ -29,7 +29,7 @@ export function getPieceType(x: number, y: number, boardState: Piece[][]) {
   //   .split("/")[3] // wQ.svg
   //   .split(".")[0][1]; // Q
   const type: string = boardState[y][x]
-  .split("/")[4]  // wQ-asdf.svg
+  .split("/")[2]  // wQ-asdf.svg
   .split("-")[0][1]; // Q
   return type;
 }
@@ -47,7 +47,7 @@ export function getPieceName(
   //   .split("/")[3] // wQ.svg
   //   .split(".")[0]; // wQ
   const pieceName: string = boardState[y][x]
-    .split("/")[4]  // wQ-asdf.svg
+    .split("/")[2]  // wQ-asdf.svg
     .split("-")[0]; // wQ
   return pieceName;
 }
